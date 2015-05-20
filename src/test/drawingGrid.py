@@ -1,15 +1,5 @@
-# OnSize: All relevant variables have to be updated
-# # Math of snapping to a grid:
-# x_snap = scale * round(x/scale)
-# y_snap = scale * round(y/scale)
-# where scale = the size of the cell in the grid (usually in pixels)
-# if time allows, discuss correcting conditional in while statement to fill grid on window
+
 import wx
-
-class Pipe:
-
-
-class Node:
 
 
 class DrawingGridWindow(wx.Window):
@@ -21,11 +11,13 @@ class DrawingGridWindow(wx.Window):
         self.color = "Black"
         self.thickness = 1
         self.pen = wx.Pen(self.color, self.thickness, wx.SOLID)
+        self.zoom = 1
         # self.InitBuffer()
-        self.pos = (0,0)
+        #self.pos = (0,0)
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
 
+        self.Bind(wx.EVT_MOUSEWHEEL, self.onScroll)
         #FOR DRAWING############################################################
 
         self.lines = []
@@ -39,7 +31,7 @@ class DrawingGridWindow(wx.Window):
         self.size_initial = parent.GetSize()
         self.width, self.height = self.size_initial
         # scale size of cell
-        self.scale = 32
+        self.scale = 16
         self.SetDoubleBuffered(True)
         self.InitBuffer()
 
@@ -49,9 +41,9 @@ class DrawingGridWindow(wx.Window):
         # unneeded background erasures and redraws
         pass
 
+
     #DRAWING RELATED FUNCTIONS##################################################
     def InitBuffer(self):
-
         size = self.GetClientSize()
         self.buffer = wx.EmptyBitmap(size.width, size.height)
         dc = wx.BufferedDC(None, self.buffer)
@@ -68,6 +60,7 @@ class DrawingGridWindow(wx.Window):
 
     '''Draws lines when left mouse button is clicked'''
     def OnLeftDown(self, event):
+        #print event.GetEventType()
         if self.firstClick is False:
             self.firstClick = True
             self.pos = self.getSnapPos(event.GetPositionTuple())
@@ -76,7 +69,7 @@ class DrawingGridWindow(wx.Window):
             if len(self.lines) != 0:
                self.pos = self.getSnapPos(event.GetPositionTuple())
 
-            event.Skip()
+        event.Skip()
 
 
     def keyDown(self, event):
@@ -85,6 +78,9 @@ class DrawingGridWindow(wx.Window):
            self.firstClick = False
 
     def OnMotion(self, event):
+        eventType = event.GetEventType()
+        if eventType == wx.EVT_MOTION:
+            print "true true"
         if event.Moving() and self.firstClick:
             dc = wx.BufferedDC(wx.ClientDC(self), self.buffer)
             self.drawMotion(dc, event)
@@ -106,6 +102,16 @@ class DrawingGridWindow(wx.Window):
             dc.DrawLine(*line)
 
 
+    def onScroll(self, event):
+
+        sign = event.GetWheelRotation() / 120
+        if(sign > 0):
+            self.zoom = self.zoom * 1.05
+            self.Refresh()
+        else:
+            self.zoom = self.zoom * 0.95
+            self.Refresh()
+
     def OnSize(self, event):
         self.InitBuffer()
         size = self.GetClientSize()
@@ -121,7 +127,7 @@ class DrawingGridWindow(wx.Window):
 
     def OnPaint(self, event):
         dc = wx.BufferedPaintDC(self, self.buffer)
-
+        dc.SetUserScale(self.zoom, self.zoom)
 
 
 class SketchFrame(wx.Frame):

@@ -1,0 +1,20 @@
+
+nodedata = {
+1 : ("Erzincan", "SN", "2015"),
+2 : ("Samsun", "DN", "1983"),
+3 : ("Ankara", "JN", "1921"),
+4 : ("Erzurum", "DN", "1946"),
+5 : ("Trabzon", "DN", "1975"),
+6 : ("Diyarbakir", "DN", "1984"),
+7 : ("Antalya", "DN", "1999"),
+8 : ("Karaman", "DN", "2004"),
+9 : ("Izmir", "DN", "2007"),
+10: ("Erzincan", "SN", "2015"),
+11: ("Samsun", "DN", "1983"),
+25: ("Ankara", "JN", "1921"),
+38: ("Erzurum", "DN", "1946"),
+47: ("Trabzon", "DN", "1975"),
+75: ("Diyarbakir", "DN", "1984"),
+89: ("Antalya", "DN", "1999"),
+100: ("Karaman", "DN", "2004"),
+2000: ("Izmir", "DN", "2007")}

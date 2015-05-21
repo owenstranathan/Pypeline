@@ -8,18 +8,18 @@ grid_cell_size = 30
 
 class Example(wx.Frame):
     def __init__(self, parent, id, title, position, size):
-		wx.Frame.__init__(self, parent, id, title, position, size)
-		self.InitUI()
-		##BIND MOUSE EVENTS
-		self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.onLeftDown)
-		self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.onMouseMove)
-		self.Canvas.Bind(FloatCanvas.EVT_MOUSEWHEEL, self.onWheel)
-		##BIND KEYBOARD EVENTS
-		self.Canvas.Bind(FloatCanvas.EVT_KEY_DOWN, self.onKeyDown)
+        wx.Frame.__init__(self, parent, id, title, position, size)
+        self.InitUI()
+        ##BIND MOUSE EVENTS
+        self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.onLeftDown)
+        self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.onMouseMove)
+        self.Canvas.Bind(FloatCanvas.EVT_MOUSEWHEEL, self.onWheel)
+        ##BIND KEYBOARD EVENTS
+        #self.Canvas.Bind(FloatCanvas.EVT_KEY_DOWN, self.onKeyDown)
 
-		self.firstClick = False
+        self.firstClick = False
 
-	##INIT UI AND FRAME_SETTINGS
+    ##INIT UI AND FRAME_SETTINGS
     def InitUI(self):
         menubar = wx.MenuBar()
         fileMenu = wx.Menu()
@@ -44,28 +44,40 @@ class Example(wx.Frame):
     def OnQuit(self, event):
         self.Close()
 
-	##LEFT CLICK EVENT HANDLER
-	def onLeftDown(self, event):
+    ##LEFT CLICK EVENT HANDLER
+    def onLeftDown(self, event):
+        if self.firstClick is False:
+            self.firstClick = True
+            self.pos = self.getSnapPos(event.GetPositionTuple())
+            print self.pos
+        else:
+            self.lines.append(self.pos + self.getSnapPos(event.GetPositionTuple()))
+            if len(self.lines) != 0:
+               self.pos = self.getSnapPos(event.GetPositionTuple())
 
-		if self.firstClick == False:
-			self.firstClick = True
-			self.pos = self.getSnapPos(event.GetPositionTuple())
-		else:
-			self.lines.append(self.pos + self.getSnapPos(event.GetPositionTuple()))
-			if len(self.lines) != 0:
-				self.pos = self.getSnapPos(event.GetPositionTuple())
+            event.Skip()
 
-        event.Skip()
+    def onKeyDown(self, event):
+        pass
+    ##POSSIBLY DEPRECIATED
+    def getSnapPos(self, arg_pos):
+        return (grid_cell_size* round(arg_pos[0]/grid_cell_size), grid_cell_size*round(arg_pos[1]/grid_cell_size))
 
-	##POSSIBLY DEPRECIATED
-	def getSnapPos(self):
-		return (grid_cell_size* round(arg_pos[0]/grid_cell_size), grid_cell_size*round(arg_pos[1]/grid_cell_size))
+    def onMouseMove(self,event):
+        # if event.Moving() and self.firstClick:
+        #     self.drawMotion(event)
+        #     event.Skip()
+        pass
 
-	def onMouseMove(self,event):
-		pass
+    def drawMotion(self, event):
 
-	def onWheel(self,event):
-		pass
+        # self.newPos = self.getSnapPos(event.GetPositionTuple())
+        # coords = self.pos + self.newPos
+        # self.Canvas.AddArrowLine(*coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=8)
+        pass
+
+    def onWheel(self,event):
+        pass
 def main():
 
     ex = wx.App()

@@ -13,6 +13,41 @@ grid_cell_size = 30
 def YDownProjection(CenterPoint):
     return N.array((1, -1))
 
+class OpacityMixin:
+    def SetBrush(self, FillColor, FillStyle):
+        "Like standard SetBrush except that FillStyle is an integer giving\
+        opacity , where 0<=opacity<=255"
+
+        opacity = FillStyle
+
+        c = wx.Color()
+        c.SetFromName(FillColor)
+        r,g,b = c.Get()
+        c = wx.Color(r,g,b,opacity)
+        self.Brush = wx.Brush(c)
+
+
+class AlphaCircle(OpacityMixin, FloatCanvas.Circle):
+    def __init__(self, XY, Diameter, **kwargs):
+        FloatCanvas.Circle.__init__(self, XY, Diameter, **kwargs)
+        self.XY = self.Center
+
+    def _Draw(self, dc, WorldToPixel, ScaleWorldToPixel, HTdc=None):
+        gc = wx.GraphicsContext.Create(dc)
+        (XY, WH) = self.SetUpDraw(gc, WorldToPixel, ScaleWorldToPixel, HTdc)
+
+        path = gc.CreatePath()
+        center = XY
+        radius = WH[0] * 0.5
+
+        path.AddCircle(center[0], center[1], radius)
+
+        gc.PushState()
+        gc.SetPen(wx.Pen(self.LineColor, self.LineWidth))
+        gc.SetBrush(self.Brush)
+        gc.DrawPath(path)
+        gc.PopState()
+
 class SmoothArrowLine(FloatCanvas.PointsObjectMixin, FloatCanvas.LineOnlyMixin, FloatCanvas.DrawObject):
     """
     ArrowLine class definition.

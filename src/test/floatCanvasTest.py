@@ -1,3 +1,7 @@
+# CreateRadialGradientBrush (self, xo, yo, xc, yc, radius, oColor, cColor)
+# Canvas.AddCircle(xy, D, LineWidth = lw, LineColor = colors[cl], FillColor = colors[cf])
+# Canvas.AddText("Circle # %i"%(i), xy, Size = 12, BackgroundColor = None, Position = "cc")
+
 import wx
 import numpy as N
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas
@@ -20,8 +24,10 @@ class Example(wx.Frame):
         ##BIND KEYBOARD EVENTS
         self.Canvas.Bind(wx.EVT_KEY_DOWN, self.onKeyDown)
 
+        ##CHANGE TO INITIALIZE WITH TOOLBAR BUTTON
         self.firstClick = False
         self.lines = []
+        self.node_pos_list = []
 
 
     ##INIT UI AND FRAME_SETTINGS
@@ -39,12 +45,16 @@ class Example(wx.Frame):
                              Debug=0,
                              BackgroundColor="White",
                              ).Canvas
-        self.Canvas.InitAll()
-        self.SetSize((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.SetTitle('Simple menu')
-        self.Centre()
-        self.Show(True)
 
+        # InitAll() sets everything in the Canvas to default state.
+        # It can be used to reset the Canvas
+        self.Canvas.InitAll()
+
+        self.SetSize((SCREEN_WIDTH, SCREEN_HEIGHT))
+        self.SetTitle('ASRAD Ueber Alles')
+        self.Canvas.ZoomToBB()
+        self.Centre()
+        self.Show()
 
     def OnQuit(self, event):
         self.Close()
@@ -54,14 +64,15 @@ class Example(wx.Frame):
         if self.firstClick is False:
             self.firstClick = True
             self.pos = self.getSnapPos(event.GetCoords())
-
+            self.Canvas.AddCircle(self.pos, 10, LineWidth=1, LineColor='BLACK', FillColor='BLACK')
+            self.node_pos_list.append(self.pos)
             print self.pos
         else:
-            self.lines.append((self.pos , self.getSnapPos(event.GetCoords())))
+            self.lines.append((self.pos, self.getSnapPos(event.GetCoords())))
             if len(self.lines) != 0:
-               self.pos = self.getSnapPos(event.GetCoords())
-
-            event.Skip()
+                self.pos = self.getSnapPos(event.GetCoords())
+                self.node_pos_list.append(self.pos)
+        event.Skip()
 
     def onKeyDown(self, event):
         key_code = event.GetKeyCode()
@@ -82,14 +93,15 @@ class Example(wx.Frame):
         self.newPos = self.getSnapPos(event.GetCoords())
         coords = (self.pos , self.newPos)
         print coords
-        self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=8)
-        #self.Canvas.ZoomToBB()
+        self.Canvas.AddSmoothArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
         self.Canvas.Draw()
         self.Canvas.InitAll()
         for line in self.lines:
-            self.Canvas.AddArrowLine(line, LineWidth=2, LineColor="GREEN", ArrowHeadSize=8  )
+            self.Canvas.AddSmoothArrowLine(line, LineWidth=2, LineColor="RED", ArrowHeadSize=16)
+        for nodes in self.node_pos_list:
+            self.Canvas.AddCircle(nodes, 10, LineWidth=1, LineColor='BLACK', FillColor='BLACK')
 
-    def onWheel(self,event):
+    def onWheel(self, event):
         pass
 
 def main():

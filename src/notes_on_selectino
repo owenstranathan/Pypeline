@@ -1,0 +1,40 @@
+clickCoords = somshit
+releaseCoords = someshit
+
+x_bounds = (min(clickCoords[0], release[0]), max(clickCoords[0], releaseCoords[0]))
+y_bounds = (min(clickCoords[1], release[1]), max(clickCoords[], releaseCoords[1]))
+
+
+def isInRect(node):
+    if node.pos.x <= x_bounds[1] and node.pos.x >= x_bounds[0]:
+        if node.pos.y<= y_bounds[1] and node.pos.y >= y_bounds[0]:
+            return True
+
+    return False
+
+node_list = [(0,0), (2,1)]
+in_rect_list = []
+for node in node_list:
+    if(isInRect(node)):
+        in_rect_list.append(node)
+
+trans_x = clickCoords[0]-releaseCoords[0]
+trans_y = clickCoords[1]-releaseCoords[1]
+
+
+
+
+
+
+class Selection():
+    def __init__(self):
+        self.nodes[]
+
+    def translate(self, delta_x, delta_y):
+        for node in self.nodes:
+            node.pos.x += delta_x
+            node.pos.y += delta_y
+
+        for node in self.nodes:
+            for edge in self.node._neighbors:
+                #reweigth edge

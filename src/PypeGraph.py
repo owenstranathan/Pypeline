@@ -9,7 +9,7 @@
 
     a NODE is:
         a list of edges
-        a unique lable
+        a unique label
         an X coordinate
         a Y coordinate
         #other pipeline network engineery stuff
@@ -29,8 +29,8 @@ CONTRACTS:
         duplicate edges are disallowed
 '''
 class Node():
-    def __init__(self, pos, lable):
-        self.lable = lable
+    def __init__(self, pos, label):
+        self.label = label
         self.pos = pos #a position on the cartesian plane
         self._neighbors = []  ##an empty list to hold edges, named neighbors
         ##MORE...
@@ -38,9 +38,9 @@ class Node():
     ##adds edge if it is not a duplicate
     def addEdge(self, node, weight = 1):
         for edge in self._neighbors:
-            if edge.node.lable == node.lable or edge.node.pos == node.pos:
+            if edge.node.label == node.label or edge.node.pos == node.pos:
                 return False
-        print "node: ", self.lable, " is getting neighbor: ", node.lable
+        print "node: ", self.label, " is getting neighbor: ", node.label
         self._neighbors.append(Edge(node, weight))
         return True
 
@@ -65,7 +65,7 @@ class Edge():
     1)
         the graph disallows adding duplicate nodes
     2)
-        the graph will auto lable the graph if the lable argument given
+        the graph will auto label the graph if the label argument given
         to addNode is equal to -1, which it is by default
     3)
         if the focus node is deleted the focus node becomes
@@ -84,9 +84,9 @@ class Graph():
     ##to add a new node simply append a new node to the node list
     ##returns true if the node was added
     ##false if contract(1) of graph were broken
-    def addNode(self, pos,  lable=-1):
+    def addNode(self, pos,  label=-1):
         for node in self.nodes:
-            if node.pos == pos or node.lable == lable:
+            if node.pos == pos or node.label == label:
                 print "cannont add node"
                 return False
         print "nodes is gettin added"
@@ -104,34 +104,34 @@ class Graph():
     ##deleting a node is alittle more complicated
     ##useing something similar to BFT
     ##python is weird and my c++ brain doesn't understand
-    def deleteNode(self, lable):
+    def deleteNode(self, label):
         ##examine every node in the list
         for node in self.nodes:
             ##if the node is found then remove it from the graph
-            if node.lable == lable:
+            if node.label == label:
                 self.nodes.remove(node)
             else:
                 ##also look for the node in the edges of other nodes
                 for edge in node._neighbors:
                     ##and remove that edge if it exists
-                    if edge.node.lable == lable:
+                    if edge.node.label == label:
                         node._neighbors.remove(edge)
 
         ##reset the focus node if necessary
-        if self.focus_node.lable == lable:
+        if self.focus_node.label == label:
             if not self.nodes:
                 print "graph empty"
             else:
                 self.focus_node = self.nodes[-1]
 
     #########################################
-    ##for finding a node by lable			#
-    def findNode(self, lable):				#
+    ##for finding a node by label			#
+    def findNode(self, label):				#
         for node in self.nodes:				#
-            if node.lable == lable:			#
+            if node.label == label:			#
                 return node					#
                                             #	A findNode function for
-    ##for finding a node by pos				#	both lable and position is
+    ##for finding a node by pos				#	both label and position is
     def findNode(self, pos):				#	unnessecary because
         for node in self.nodes:				#	two individual nodes
             if node.pos == pos:				#	should never have
@@ -144,8 +144,8 @@ class Graph():
         self.focus_node = self.findNode(pos)
 
     ##set focus given position
-    def setFocus(self, lable):
-        self.focus_node = self.findNode(lable)
+    def setFocus(self, label):
+        self.focus_node = self.findNode(label)
 
     ##resets the focus to the last node in the list
     def resetFocus(self):
@@ -155,15 +155,15 @@ class Graph():
         ##stash the node you are about to remove
         deadNode = self.nodes[-1]
         ##delete the node
-        self.deleteNode(self.nodes[-1].lable)
+        self.deleteNode(self.nodes[-1].label)
         ##return the nead node
         return deadNode
 
     ##prints the adjacency list to the console
     def printGraph():
         for node in self.graph.nodes:
-            neighbors = [neighbor.node.lable for neighbor in node._neighbors]
-            print node.lable, neighbors
+            neighbors = [neighbor.node.label for neighbor in node._neighbors]
+            print node.label, neighbors
 
 ###############################################################################
 ##DRAW GRAPH###################################################################

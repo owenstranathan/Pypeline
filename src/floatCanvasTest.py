@@ -106,7 +106,7 @@ class Example(wx.Frame):
     ##LEFT CLICK EVENT HANDLER
     def onLeftDown(self, event):
         #for node in self.graph.nodes:
-        #    print node.lable, " : " , node._neighbors
+        #    print node.label, " : " , node._neighbors
         #get the position of the click
         current_pos = self.getSnapPos(event.GetCoords())
         #if this is the first click

@@ -79,6 +79,10 @@ class Graph():
         self.focus_node = None
         ##a private integer for automatic id assignment
         self._node_id = 0
+        ##undo history so that you can redo
+        self.undone_nodes = []
+
+
 
 
     ##to add a new node simply append a new node to the node list
@@ -89,7 +93,6 @@ class Graph():
             if node.pos == pos or node.label == label:
                 print "cannont add node"
                 return False
-        print "nodes is gettin added"
         self.nodes.append(Node(pos, self._node_id))
         self._node_id += 1
         return True
@@ -150,6 +153,7 @@ class Graph():
     ##resets the focus to the last node in the list
     def resetFocus(self):
         self.focus_node = self.nodes[-1]
+        self.printGraph()
 
     def pop(self):
         ##stash the node you are about to remove
@@ -160,43 +164,60 @@ class Graph():
         return deadNode
 
     ##prints the adjacency list to the console
-    def printGraph():
-        for node in self.graph.nodes:
+    def printGraph(self):
+        print "----------------------------------------------------------------"
+        for node in self.nodes:
             neighbors = [neighbor.node.label for neighbor in node._neighbors]
             print node.label, neighbors
-
-###############################################################################
-##DRAW GRAPH###################################################################
-###############################################################################
+        print "----------------------------------------------------------------"
 
 
-'''Global variables'''
+    def undo(self):
+        ##if the graph is empty do nothing
+        if not self.nodes:
+            print "nothing to undo"
+            return
+        ##other wise
+        else:
+            ##push the last node added to the graph onto the
+            ##undo history stack
+            ##I say stack because that's really what it is
+            ##it's a list that practices last in first out
+            ##i.e. a stack
+            self.undone_nodes.append(self.pop())
+            if not self.nodes:
+                self.firstClick = False
+            else:
+                self.resetFocus()
 
-GRAPH_HEIGHT = 640
-GRAPH_WIDTH = 800
-GRAPH_SIZE = (GRAPH_WIDTH, GRAPH_HEIGHT)
-NODE_SIZE = 10
 
-
-class DrawingGraph(Graph):
-    def __init__(self):
-            Graph.__init__(self)
-
-    ##this uses BFT(breadth first traversal) to draw every node and
-    ##edge in the graph
-    def draw(self,Canvas):
-        for node in self.nodes:
-            Canvas.AddCircle(
-                node.pos,
-                10,
-                LineWidth=1,
-                LineColor='Black',
-                FillColor='Black'
-            )
-            for edge in node._neighbors:
-                line = (node.pos, edge.node.pos)
-                Canvas.AddArrowLine(
-                    line, LineWidth=2,
-                    LineColor="Red",
-                    ArrowHeadSize=16
-                )
+    ##redoes undone nodes
+    def redo(self):
+        ##if the list is empty do nothing
+        if not self.undone_nodes:
+            print "nothing to redo"
+            return
+        ##other wise grab the last node in the undo history
+        else:
+            zombieNode = self.undone_nodes.pop()
+            ##try and add that node to the graph
+            ##there should never be a problem here but we made
+            ##addNode return bool so we should use it
+            if not self.addNodeDirectly(zombieNode):
+                print "cannot add node"
+                return
+            ##if you can add it
+            else:
+                ##try and make the edge
+                ##this might have a fail condition but##not one that I can think
+                ##of, maybe you're smarter than me ;)
+                if not self.focus_node.addEdge(zombieNode):
+                    print "cannot add edge"
+                    return
+                ##if that's successfull(it should be)
+                ##then reset the focus
+                ##and the current pos
+                else:
+                    print self.focus_node.label
+                    self.resetFocus()
+                    print self.focus_node.label

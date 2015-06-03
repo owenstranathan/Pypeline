@@ -74,61 +74,6 @@ class UIGraph(PypeGraph.Graph, wx.Frame):
         self.Centre()
         self.Show()
 
-    def undo(self, coords):
-        ##if the graph is empty do nothing
-        if not self.nodes:
-            print "nothing to undo"
-            return
-        ##other wise
-        else:
-            ##push the last node added to the graph onto the
-            ##undo history stack
-            ##I say stack because that's really what it is
-            ##it's a list that practices last in first out
-            ##i.e. a stack
-            self.undone_nodes.append(self.pop())
-            if not self.nodes:
-                self.firstClick = False
-            else:
-                self.resetFocus()
-        #because state has likely changes we ReDraw
-        self.draw()
-
-    ##redoes undone nodes
-    def redo(self, coords):
-        ##if the list is empty do nothing
-        if not self.undone_nodes:
-            print "nothing to redo"
-            return
-        ##other wise grab the last node in the undo history
-        else:
-            zombieNode = self.undone_nodes.pop()
-            ##try and add that node to the graph
-            ##there should never be a problem here but we made
-            ##addNode return bool so we should use it
-            if not self.addNodeDirectly(zombieNode):
-                print "cannot add node"
-                return
-            ##if you can add it
-            else:
-                ##try and make the edge
-                ##this might have a fail condition but##not one that I can think
-                ##of, maybe you're smarter than me ;)
-                if not self.focus_node.addEdge(zombieNode):
-                    print "cannot add edge"
-                    return
-                ##if that's successfull(it should be)
-                ##then reset the focus
-                ##and the current pos
-                else:
-                    print self.focus_node.label
-                    self.resetFocus()
-                    print self.focus_node.label
-
-        #because state has likely changes we ReDraw
-        self.draw()
-
-
     ##LEFT CLICK EVENT HANDLER
     def onLeftDown(self, event):
         ##skip the event
@@ -177,11 +122,12 @@ class UIGraph(PypeGraph.Graph, wx.Frame):
         keyCode = event.GetKeyCode()
         ##is ctrl and 'Y' pressed
         if ctrlDown and keyCode is 89:
-            self.redo(getSnapPos(event.GetPosition()))
+            self.redo()
+            self.draw()
         ##is ctrl and 'Z' presed
         elif ctrlDown and keyCode is 90:
-            self.undo(getSnapPos(event.GetPosition()))
-
+            self.undo()
+            self.draw()
         #because state has likely changes we ReDraw
         self.draw
         ##other stuff

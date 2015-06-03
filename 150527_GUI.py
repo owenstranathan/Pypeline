@@ -1,4 +1,3 @@
-
 from __future__ import division
 import wx
 import time
@@ -6,10 +5,15 @@ import os
 import sys
 import images
 import wx.aui
+import wx.lib.scrolledpanel as scrolled
 import wx.dataview as dv
 import wx.lib.mixins.listctrl as listmix
 import wx.lib.agw.ribbon as RB
 import ListCtrl
+from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources, GUIMode
+import SelectionTool
+import overlay_alpha
+
 
 ########################################################################
 
@@ -115,35 +119,6 @@ class CustomStatusBar(wx.StatusBar):
 ################################################################################################################################################
 ################################################################################################################################################
 
-
-'''DESIGN PANEL SECTION'''
-class TestAuiPanel(wx.Panel):
-    """ Simple class example for wx.aui.AuiNotebook. """
-
-    def __init__(self, parent):
-        """ Class constructor. """
-
-        wx.Panel.__init__(self, parent, -1)
-
-        # Create the wx.aui.AuiNotebook
-        self.nb = wx.aui.AuiNotebook(self)
-# (202,223,244)
-        # Create a simple text control
-        page = wx.TextCtrl(self.nb, -1, "Design/Map Screen", style=wx.TE_MULTILINE)
-        # Add the text control as wx.aui.AuiNotebook page
-
-        self.nb.AddPage(page, "Design-1")
-
-        # # Add some more pages to the wx.aui.AuiNotebook
-        # for num in range(1, 5):
-        #     page = wx.TextCtrl(self.nb, -1, "This is page %d" % num, style=wx.TE_MULTILINE)
-        #     self.nb.AddPage(page, "Tab Number %d" % num)
-
-        # Put the wx.aui.AuiNotebook in a sizer and
-        # assign the sizer to the main panel
-        sizer = wx.BoxSizer()
-        sizer.Add(self.nb, 1, wx.EXPAND)
-        self.SetSizer(sizer)
 
 ################################################################################################################################################
 ################################################################################################################################################
@@ -539,7 +514,7 @@ class PhysicalPanel(wx.Panel):
 
         sizer = wx.BoxSizer(wx.VERTICAL)
 
-        bmp= wx.Image("aquabutton.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
         button = wx.BitmapButton(self, -1, bmp, (20, 20),
@@ -911,10 +886,20 @@ class RibbonFrame(wx.Frame):
 
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
+        # menubar = wx.MenuBar()
+        # fileMenu = wx.Menu()
+        # fitem = fileMenu.Append(wx.ID_EXIT, 'Quit', 'Quit application')
+        # menubar.Append(fileMenu, '&File')
+        # self.SetMenuBar(menubar)
+
+        # self.toolbar = self.CreateToolBar()
+        # self.toolbar.AddLabelTool(1, '', wx.Bitmap("aquabutton.jpg"))
+        # self.toolbar.Realize()
+
         self.statusbar = CustomStatusBar(self)
         self.SetStatusBar(self.statusbar)
 
-        panel = wx.Panel(self)
+        panel = scrolled.ScrolledPanel(self)
         #NOTE
         # in init assign wx.lib.agw.ribbon.RibbonBar after which you can add pages to with wx.lib.agw.ribbon.RibbonPage
         self._ribbon = RB.RibbonBar(panel, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
@@ -939,7 +924,7 @@ class RibbonFrame(wx.Frame):
         Results = RB.RibbonPage(self._ribbon, wx.ID_ANY, "RESULTS")
         Help = RB.RibbonPage(self._ribbon, wx.ID_ANY, "HELP")
 
-        '''RIBBON PANEL SETTINGS'''
+        '''FILE PANEL SETTINGS'''
 
         toolbar_panel = RB.RibbonPanel(File, wx.ID_ANY, "", wx.NullBitmap, wx.DefaultPosition,
                                        wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE|RB.RIBBON_PANEL_EXT_BUTTON)
@@ -950,7 +935,7 @@ class RibbonFrame(wx.Frame):
         toolbar = RB.RibbonToolBar(toolbar_panel, wx.ID_ANY)
 
         toolbar.AddSeparator()
-        toolbar.AddHybridTool(wx.ID_NEW, wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER, wx.Size(24, 23)))
+        toolbar.AddHybridTool(wx.ID_NEW, wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER, wx.Size(24, 24)))
         toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, wx.Size(24, 23)))
 
         toolbar.AddSeparator()
@@ -970,15 +955,56 @@ class RibbonFrame(wx.Frame):
 
         #######################################################################
 
+        # DESIGN RIBBON PANELS
+        # PANELS ORGANIZED TO BY FUNCTION
+        # FIRST PANEL HOLDS DRAWING FUNCTIONS
+
+        # Just testing
+        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+
+        design_bar = RB.RibbonPanel(Design, wx.ID_ANY, "Drawing Tools", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
+
+        drawing_tools = RB.RibbonButtonBar(design_bar)
+
+        drawing_tools.AddSimpleButton(wx.ID_ANY, "Line Tool", bmp,
+                                  "This is a tooltip for line drawing")
+
+        drawing_tools.AddSimpleButton(wx.ID_ANY, "Node Tool", bmp,
+                                  "This is a tooltip for adding nodes")
+
+        # SECOND PANEL HOLDS VIEWING FUNCTIONS
+        # VIEWING ICONS ARE TAKEN FROM FLOATCANVAS RESOURCES
+        view_bar = RB.RibbonPanel(Design, wx.ID_ANY, "View", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
+
+        viewing_tools = RB.RibbonButtonBar(view_bar)
+
+        viewing_tools.AddSimpleButton(wx.ID_ANY, "Pointer", Resources.getPointerBitmap(),
+                                  "This is a tooltip for hit testing lines")
+
+        viewing_tools.AddSimpleButton(wx.ID_ANY, "Zoom In", Resources.getMagPlusBitmap(),
+                                  "This is a tooltip for zooming")
+
+        viewing_tools.AddSimpleButton(wx.ID_ANY, "Zoom Out", Resources.getMagMinusBitmap(),
+                                  "This is a tooltip for zooming out")
+
+        viewing_tools.AddSimpleButton(wx.ID_ANY, "Panning", Resources.getHandBitmap(),
+                                  "This is a tooltip for panning")
+
+        #######################################################################
+
+
         label_font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT)
         self._bitmap_creation_dc.SetFont(label_font)
 
-        # Now Realize all of them
+        # Now instantiate all of them
         self._ribbon.Realize()
+
+
+        ############################################################################
 
         # We added NotebookDemo for left side screen, testauipanel for design screen, testsearchcontrol for search buton
         self.notebook = Notebook(panel)
-        self.auipanel = TestAuiPanel(panel)
+        self.drawing_canvas = SelectionTool.SelectionTool(panel)
         # self.search_button = TestSearchCtrl(panel)
         self.search = TestSearchCtrl(panel)
 
@@ -998,13 +1024,13 @@ class RibbonFrame(wx.Frame):
         s2.Add(s2b, 6, wx.EXPAND)
 
         # logwindow yerine Demo'dan Toolbar orneginden al
-        s2b.Add(self.auipanel, 1, wx.EXPAND | wx.FIXED_MINSIZE)
+        s2b.Add(self.drawing_canvas, 1, wx.EXPAND | wx.FIXED_MINSIZE)
         s2a.Add(self.notebook, 1, wx.EXPAND | wx.FIXED_MINSIZE)
         s2a.Add(self.search, 0, wx.EXPAND | wx.FIXED_MINSIZE)
 
         panel.SetSizer(s)
         self.panel = panel
-        self.BindEvents(toolbar_panel)
+        self.BindEvents([toolbar_panel, design_bar])
         '''WE NEED TO ORGINIZED WAY PUTTING ALL THE IMAGES IN'''
 
         self.SetIcon(images.Mondrian.Icon)
@@ -1014,14 +1040,17 @@ class RibbonFrame(wx.Frame):
 
     def BindEvents(self, bars):
 
-        toolbar_panel = bars
-        self.Bind(RB.EVT_RIBBONTOOLBAR_CLICKED, self.OnNew, id=wx.ID_NEW)
-        self.Bind(RB.EVT_RIBBONTOOLBAR_DROPDOWN_CLICKED, self.OnNewDropdown, id=wx.ID_NEW)
-        self.Bind(RB.EVT_RIBBONTOOLBAR_DROPDOWN_CLICKED, self.OnPrintDropdown, id=wx.ID_PRINT)
+        # SYNTAX:
+        # ribbon_page_panel.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnDefaultProvider, id)
+
+        design_bar, toolbar_panel = bars
+
+        design_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnDrawingPanelClick, id=-1)
 
 
+    def OnDrawingPanelClick(self, event):
+        pass
 
-    '''WE NEED TO LOOK ONLINE DOCUMENTATION FOR DIFFERENT RIBBON STYLES'''
 
     def SetBarStyle(self, agwStyle):
 
@@ -1083,4 +1112,3 @@ if __name__ == '__main__':
     frame.Show(True)
     frame.Centre()
     app.MainLoop()
-

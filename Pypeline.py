@@ -11,12 +11,8 @@ import wx.lib.mixins.listctrl as listmix
 import wx.lib.agw.ribbon as RB
 import ListCtrl
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources, GUIMode
-import UIGraph as UIG
+import GraphDesignPanel as  GDP
 
-
-import overlay_alpha
-
->>>>>>> ea11b89ebdc523f6b6d8561527d99b5bdb336c5d:03.06.2015_GUI.py
 
 
 ########################################################################
@@ -1009,7 +1005,7 @@ class RibbonFrame(wx.Frame):
         # We added NotebookDemo for left side screen, testauipanel for design screen, testsearchcontrol for search buton
         self.notebook = Notebook(panel)
 
-        self.drawing_canvas = UIG.GraphDesignPanel(panel)
+        self.drawing_canvas = GDP.GraphDesignPanel(panel)
 
         # self.search_button = TestSearchCtrl(panel)
         self.search = TestSearchCtrl(panel)

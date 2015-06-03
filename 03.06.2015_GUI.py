@@ -11,7 +11,8 @@ import wx.lib.mixins.listctrl as listmix
 import wx.lib.agw.ribbon as RB
 import ListCtrl
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources, GUIMode
-import SelectionTool
+import FloatCanvas_in_a_standalone_panel
+
 import overlay_alpha
 
 
@@ -1004,7 +1005,7 @@ class RibbonFrame(wx.Frame):
 
         # We added NotebookDemo for left side screen, testauipanel for design screen, testsearchcontrol for search buton
         self.notebook = Notebook(panel)
-        self.drawing_canvas = SelectionTool.SelectionTool(panel)
+        self.drawing_canvas = FloatCanvas_in_a_standalone_panel.DrawTheTrueTrue(panel)
         # self.search_button = TestSearchCtrl(panel)
         self.search = TestSearchCtrl(panel)
 

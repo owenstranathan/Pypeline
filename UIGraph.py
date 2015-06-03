@@ -11,7 +11,7 @@
 '''
 import wx
 import numpy as N
-from wx.lib.floatcanvas import NavCanvas, FloatCanvas
+from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode, Resources
 import PypeGraph as PypeGraph
 
 
@@ -36,13 +36,18 @@ def getSnapPos( arg_pos):
 ###############################################################################
 
 
-class UIGraph(PypeGraph.Graph, wx.Frame):
-    def __init__(self, parent, id, title, position, size):
-        wx.Frame.__init__(self, parent, id, title, position, size)
-        PypeGraph.Graph.__init__(self)
-        self.InitUI()
-        ##undo history so that you can redo
-        self.undone_nodes = []
+class GraphDesignPanel(wx.Panel):
+    def __init__(self, parent):
+        wx.Panel.__init__(self, parent)
+
+        self.graph = PypeGraph.Graph()
+
+        self.SetBackgroundColour('WHITE')
+        self.SetBackgroundStyle(wx.BG_STYLE_CUSTOM)
+
+        self.Canvas = FloatCanvas.FloatCanvas(self)
+
+
         ##CHANGE TO INITIALIZE WITH TOOLBAR BUTTON
         self.firstClick = False
 
@@ -54,25 +59,84 @@ class UIGraph(PypeGraph.Graph, wx.Frame):
         ## BIND CHAR EVENT
         self.Canvas.Bind(wx.EVT_CHAR, self.onCharEvent)
 
-
-
-    def InitUI(self):
-        self.Canvas = NavCanvas.NavCanvas(self, -1,
-                             size=(500, 500),
-                             ProjectionFun=None,
-                             Debug=0,
-                             BackgroundColor="White",
-                             ).Canvas
-
         # InitAll() sets everything in the Canvas to default state.
         # It can be used to reset the Canvas
         self.Canvas.InitAll()
 
-        self.SetSize((GRAPH_WIDTH, GRAPH_HEIGHT))
-        self.SetTitle('ASRAD Ueber Alles')
+        # This is all from Navcanvas, to keep funtionality, I'll take these calls to FloatCanvas.GUIMode and bind them
+        # to the actual GUI Toolbar, later...
+        self.Modes = [("Pointer",  GUIMode.GUIMouse(),   Resources.getPointerBitmap()),
+                      ("Zoom In",  GUIMode.GUIZoomIn(),  Resources.getMagPlusBitmap()),
+                      ("Zoom Out", GUIMode.GUIZoomOut(), Resources.getMagMinusBitmap()),
+                      ("Pan",      GUIMode.GUIMove(),    Resources.getHandBitmap()),
+                      ]
+
+
+        self.BuildToolbar()
+
+        ## Create the vertical sizer for the toolbar and Panel
+        # Remember that verticial means the widgets will stack vertically
+        # You need to have a sizer for all widgets in the GUI
+        # In general the hierarchy needs to be followed container --> widget
+        box_sizer = wx.BoxSizer(wx.VERTICAL)
+        box_sizer.Add(self.ToolBar, 0, wx.ALL | wx.ALIGN_LEFT | wx.GROW, 4)
+
+        # second parameter refers to "proportionality" so the toolbar to drawing area will be 1:6
+        box_sizer.Add(self.Canvas, 1, wx.GROW)
+
+        # Top most sizer has to be set
+        self.SetSizerAndFit(box_sizer)
+
+        self.Canvas.SetMode(self.Modes[0][1])
+
+    # REMOVE LATER, MOVE FUNCTIONALITY TO RIBBON TOOLBAR
+
+    def BuildToolbar(self):
+        """
+        This is here so it can be over-ridden in a ssubclass, to add extra tools, etc
+        """
+        tb = wx.ToolBar(self)
+        self.ToolBar = tb
+
+        tb.SetToolBitmapSize((24, 24))
+        self.AddToolbarModeButtons(tb, self.Modes)
+        self.AddToolbarZoomButton(tb)
+        tb.Realize()
+
+    def AddToolbarModeButtons(self, tb, Modes):
+        self.ModesDict = {}
+        for Mode in Modes:
+            tool = tb.AddRadioTool(wx.ID_ANY, shortHelp=Mode[0], bitmap=Mode[2])
+            self.Bind(wx.EVT_TOOL, self.SetMode, tool)
+            self.ModesDict[tool.GetId()]=Mode[1]
+        #self.ZoomOutTool = tb.AddRadioTool(wx.ID_ANY, bitmap=Resources.getMagMinusBitmap(), shortHelp = "Zoom Out")
+        #self.Bind(wx.EVT_TOOL, lambda evt : self.SetMode(Mode=self.GUIZoomOut), self.ZoomOutTool)
+
+    def AddToolbarZoomButton(self, tb):
+        tb.AddSeparator()
+
+        self.ZoomButton = wx.Button(tb, label="Zoom To Fit")
+        tb.AddControl(self.ZoomButton)
+        self.ZoomButton.Bind(wx.EVT_BUTTON, self.ZoomToFit)
+
+
+    def HideShowHack(self):
+        ##fixme: remove this when the bug is fixed!
+        """
+        Hack to hide and show button on toolbar to get around OS-X bug on
+        wxPython2.8 on OS-X
+        """
+        self.ZoomButton.Hide()
+        self.ZoomButton.Show()
+
+    def SetMode(self, event):
+        Mode = self.ModesDict[event.GetId()]
+        self.Canvas.SetMode(Mode)
+
+    def ZoomToFit(self,Event):
         self.Canvas.ZoomToBB()
-        self.Centre()
-        self.Show()
+        self.Canvas.SetFocus() # Otherwise the focus stays on the Button, and wheel events are lost.
+
 
     ##LEFT CLICK EVENT HANDLER
     def onLeftDown(self, event):
@@ -84,33 +148,33 @@ class UIGraph(PypeGraph.Graph, wx.Frame):
         if self.firstClick is False:
             self.firstClick = True
             ##if there is already an node at the position in the graph
-            if not self.addNode(current_pos):
-                self.setFocus(current_pos)
+            if not self.graph.addNode(current_pos):
+                self.graph.setFocus(current_pos)
 
-            self.setFocus(current_pos)
+            self.graph.setFocus(current_pos)
 
         ##otherwise it's the second click
         else:
             ##first add a node to the graph
-            if not self.addNode(current_pos):
+            if not self.graph.addNode(current_pos):
                 ##if there is already a node at that position then retreave it
-                newNode = self.findNode(current_pos)
+                newNode = self.graph.findNode(current_pos)
             else:
-                newNode = self.nodes[-1]
+                newNode = self.graph.nodes[-1]
 
             ##then create an edge between the this node and the focus node
-            if not self.focus_node.addEdge(newNode):
+            if not self.graph.focus_node.addEdge(newNode):
                 ##if the edge exists then return
                 print "CANNOT ADD DUPLICATE EDGE"
                 return
 
             else:
-                self.setFocus(current_pos)
+                self.graph.setFocus(current_pos)
 
         ##if some nodes have recently been undone and you are creating new nodes
-        if self.undone_nodes:
+        if self.graph.undone_nodes:
             ##officially delete the undone nodes
-            del self.undone_nodes[:]
+            del self.graph.undone_nodes[:]
 
         #because state has likely changes we ReDraw
         self.draw
@@ -122,11 +186,11 @@ class UIGraph(PypeGraph.Graph, wx.Frame):
         keyCode = event.GetKeyCode()
         ##is ctrl and 'Y' pressed
         if ctrlDown and keyCode is 89:
-            self.redo()
+            self.graph.redo()
             self.draw()
         ##is ctrl and 'Z' presed
         elif ctrlDown and keyCode is 90:
-            self.undo()
+            self.graph.undo()
             self.draw()
         #because state has likely changes we ReDraw
         self.draw
@@ -151,7 +215,7 @@ class UIGraph(PypeGraph.Graph, wx.Frame):
     ##to draw mouse movement between clicks
     def drawMotion(self, event):
         self.newPos = getSnapPos(event.GetCoords())
-        coords = (self.focus_node.pos , self.newPos)
+        coords = (self.graph.focus_node.pos , self.newPos)
         self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
         #we draw the graoh here because the state has most probably changed
         self.draw()
@@ -159,7 +223,7 @@ class UIGraph(PypeGraph.Graph, wx.Frame):
     ##this uses BFT(breadth first traversal) to draw every node and
     ##edge in the graph
     def drawGraph(self):
-        for node in self.nodes:
+        for node in self.graph.nodes:
             self.Canvas.AddCircle(
                 node.pos,
                 10,

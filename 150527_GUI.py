@@ -11,10 +11,9 @@ import wx.lib.mixins.listctrl as listmix
 import wx.lib.agw.ribbon as RB
 import ListCtrl
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources, GUIMode
-import SelectionTool
-import overlay_alpha
+import UIGraph as UIG
 
-
+  
 ########################################################################
 
 '''ERROR TESTING'''
@@ -1004,7 +1003,7 @@ class RibbonFrame(wx.Frame):
 
         # We added NotebookDemo for left side screen, testauipanel for design screen, testsearchcontrol for search buton
         self.notebook = Notebook(panel)
-        self.drawing_canvas = SelectionTool.SelectionTool(panel)
+        self.drawing_canvas = UIG.GraphDesignPanel(panel)
         # self.search_button = TestSearchCtrl(panel)
         self.search = TestSearchCtrl(panel)
 
@@ -1108,7 +1107,7 @@ class RibbonFrame(wx.Frame):
 
 if __name__ == '__main__':
     app = wx.App()
-    frame = RibbonFrame(None, -1, "PypeSim @ASRAD",size=(900, 800))
+    frame = RibbonFrame(None, -1, "PypeSim @ASRAD",size=(900, 500))
     frame.Show(True)
     frame.Centre()
     app.MainLoop()

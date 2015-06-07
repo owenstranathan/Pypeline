@@ -241,6 +241,7 @@ class GraphDesignPanel(wx.Panel):
 
 
     def draw(self):
+
         self.Canvas.Draw()
         self.Canvas.ClearAll()
         self.drawGraph()

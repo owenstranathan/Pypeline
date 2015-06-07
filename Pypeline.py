@@ -12,7 +12,7 @@ import wx.lib.agw.ribbon as RB
 import ListCtrl
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, Resources, GUIMode
 import GraphDesignPanel as  GDP
-
+import PypeGraph as PypeGraph
 
 
 ########################################################################
@@ -955,6 +955,10 @@ class RibbonFrame(wx.Frame):
 
         #######################################################################
 
+        self.graph = PypeGraph.Graph()
+        self.drawing_canvas = GDP.GraphDesignPanel(panel, self.graph)
+
+
         # DESIGN RIBBON PANELS
         # PANELS ORGANIZED TO BY FUNCTION
         # FIRST PANEL HOLDS DRAWING FUNCTIONS
@@ -966,12 +970,11 @@ class RibbonFrame(wx.Frame):
 
         drawing_tools = RB.RibbonButtonBar(design_bar)
 
-        drawing_tools.AddSimpleButton(wx.ID_ANY, "Line Tool", bmp,
-                                  "This is a tooltip for line drawing")
 
-        drawing_tools.AddSimpleButton(wx.ID_ANY, "Node Tool", bmp,
+        drawing_tools.AddSimpleButton(wx.ID_ANY, "Add Nodes", bmp,
                                   "This is a tooltip for adding nodes")
 
+        
         # SECOND PANEL HOLDS VIEWING FUNCTIONS
         # VIEWING ICONS ARE TAKEN FROM FLOATCANVAS RESOURCES
         view_bar = RB.RibbonPanel(Design, wx.ID_ANY, "View", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
@@ -1005,7 +1008,6 @@ class RibbonFrame(wx.Frame):
         # We added NotebookDemo for left side screen, testauipanel for design screen, testsearchcontrol for search buton
         self.notebook = Notebook(panel)
 
-        self.drawing_canvas = GDP.GraphDesignPanel(panel)
 
         # self.search_button = TestSearchCtrl(panel)
         self.search = TestSearchCtrl(panel)

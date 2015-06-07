@@ -221,3 +221,22 @@ class Graph():
                     print self.focus_node.label
                     self.resetFocus()
                     print self.focus_node.label
+
+    ##this uses BFT(breadth first traversal) to draw every node and
+    ##edge in the graph
+    def draw(self, Canvas):
+        for node in self.nodes:
+            Canvas.AddCircle(
+                node.pos,
+                10,
+                LineWidth=1,
+                LineColor='BLACK',
+                FillColor='BLACK'
+            )
+            for edge in node._neighbors:
+                line = (node.pos, edge.node.pos)
+                Canvas.AddArrowLine(
+                    line, LineWidth=2,
+                    LineColor="RED",
+                    ArrowHeadSize=16
+                )

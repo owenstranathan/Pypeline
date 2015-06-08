@@ -964,7 +964,7 @@ class RibbonFrame(wx.Frame):
         # FIRST PANEL HOLDS DRAWING FUNCTIONS
 
         # Just testing
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
         design_bar = RB.RibbonPanel(Design, wx.ID_ANY, "Drawing Tools", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
 
@@ -974,7 +974,7 @@ class RibbonFrame(wx.Frame):
         drawing_tools.AddSimpleButton(wx.ID_ANY, "Add Nodes", bmp,
                                   "This is a tooltip for adding nodes")
 
-        
+
         # SECOND PANEL HOLDS VIEWING FUNCTIONS
         # VIEWING ICONS ARE TAKEN FROM FLOATCANVAS RESOURCES
         view_bar = RB.RibbonPanel(Design, wx.ID_ANY, "View", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))

@@ -4,8 +4,8 @@
         an wxPython/FloatCanvas to create a drawing
         surface for creating a pipeline network model
 
-        further more it defines drawing utilies for
-        a graphically representing a graph
+        further more it defines drawing utilities for
+        graphically representing a graph
 
         ##contracts
 '''

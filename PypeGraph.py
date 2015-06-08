@@ -40,7 +40,6 @@ class Node():
         for edge in self._neighbors:
             if edge.node.label == node.label or edge.node.pos == node.pos:
                 return False
-        print "node: ", self.label, " is getting neighbor: ", node.label
         self._neighbors.append(Edge(node, weight))
         return True
 
@@ -71,6 +70,8 @@ class Edge():
         if the focus node is deleted the focus node becomes
         the last node in the list
 '''
+NODE_SIZE = 10  ##the physical size of the node as drawn on the canvas
+
 class Graph():
     def __init__(self):
         ##an empty list of nodes ( the adjacency list )
@@ -230,7 +231,7 @@ class Graph():
         for node in self.nodes:
             Canvas.AddCircle(
                 node.pos,
-                10,
+                NODE_SIZE,
                 LineWidth=1,
                 LineColor='BLACK',
                 FillColor='BLACK'
@@ -241,4 +242,16 @@ class Graph():
                     line, LineWidth=2,
                     LineColor="RED",
                     ArrowHeadSize=16
+                )
+        if self.focus_node:
+            focus_box_wh = (NODE_SIZE + 5, NODE_SIZE + 5 )
+            focus_box_pos = (
+                self.focus_node.pos[0]-(NODE_SIZE+5)/2 ,
+                self.focus_node.pos[1] - (NODE_SIZE+5)/2 )
+            Canvas.AddRectangle(
+                focus_box_pos,
+                focus_box_wh,
+                LineStyle="Dot",
+                LineWidth=2,
+                LineColor='BLACK'
                 )

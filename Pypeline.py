@@ -956,7 +956,6 @@ class RibbonFrame(wx.Frame):
         #######################################################################
 
         self.graph = PypeGraph.Graph()
-        print self.graph
         self.drawing_canvas = GDP.GraphDesignPanel(panel, self.graph)
 
 

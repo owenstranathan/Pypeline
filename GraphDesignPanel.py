@@ -1,13 +1,13 @@
 '''
-        This is PypeGraph.py
-        PypeGraph uses the Graph structure defined in Pypeline.py
-        an wxPython/FloatCanvas to create a drawing
+        This is GraphDesignPanel.py
+        PypeGraph uses the Graph structure defined in PypeGraph.py
+        and wxPython/FloatCanvas to create a drawing
         surface for creating a pipeline network model
 
         further more it defines drawing utilities for
-        graphically representing a graph
+        graphically representing and otherwise manipulating a graph
 
-        ##contracts
+
 '''
 import wx
 import numpy as N
@@ -39,15 +39,17 @@ def getSnapPos( arg_pos):
     GUI Modes for DesignPanel
 '''
 
+"""
+DESIGN:
+    THIS GUI MODE IS FOR ADDING NODES AND OTHERWIZE EXTENDING THE GRAPH
+"""
 class GUIDesign(GUIMode.GUIBase):
     def __init__(self, canvas=None, graph=None):
         GUIMode.GUIBase.__init__(self, canvas)
         self.graph = graph
-        print self.graph
         self.firstClick = False
 
     def OnLeftDown(self, event):
-        self.graph.printGraph()
         ##get the position of the click
         current_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
         ##if this is the first click
@@ -71,7 +73,6 @@ class GUIDesign(GUIMode.GUIBase):
             ##then create an edge between the this node and the focus node
             if not self.graph.focus_node.addEdge(newNode):
                 ##if the edge exists then return
-                print "CANNOT ADD DUPLICATE EDGE"
                 return
 
             else:
@@ -83,9 +84,9 @@ class GUIDesign(GUIMode.GUIBase):
             del self.graph.undone_nodes[:]
 
         #because state has likely changes we ReDraw
+        self.graph.draw(self.Canvas)
         self.Canvas.Draw()
         self.Canvas.ClearAll()
-        self.graph.draw(self.Canvas)
 
     def OnMove(self, event):
         if self.firstClick:
@@ -93,15 +94,16 @@ class GUIDesign(GUIMode.GUIBase):
             coords = (self.graph.focus_node.pos , newPos)
             self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
             #we draw the graoh here because the state has most probably changed
+            self.graph.draw(self.Canvas)
             self.Canvas.Draw()
             self.Canvas.ClearAll()
-            self.graph.draw(self.Canvas)
 
-######################
-##Unfinished!!!!!!!
-##Selection will be handled in the selection GUImode
-##which is this
-'''Selection'''
+
+"""
+SELECTION
+    THIS GUIMODE IS FOR SELECTING NODES ON A GRAPH AND MOVING THEM.
+    LATER DELETION AND OTHER FORMS OF EDITING WILL BE SUPPORTED
+"""
 class GUISelect(GUIMode.GUIBase):
     def __init__(self, canvas=None, graph=None):
         GUIMode.GUIBase.__init__(self, canvas)
@@ -114,9 +116,9 @@ class GUISelect(GUIMode.GUIBase):
         #get the node selected if infact a node was selected
         #if there is no node at the click posistion then the
         #self.selected_node will still be none
-        self.selected_node = self.graph.findNode(pos)
-        # print self.selected_node
-        # print self.graph.nodes[0]
+        #and the condition in OnMove will not be satisfied
+        self.selected_node = self.graph.focus_node = self.graph.findNode(pos)
+
 
     def OnMove(self, event):
         if self.selected_node and event.Dragging():
@@ -126,33 +128,19 @@ class GUISelect(GUIMode.GUIBase):
             ##that you can't put the node there
             other_node = self.graph.findNode(pos)
             if not other_node:
-                self.selected_node.pos = pos
-            else:
-                print "there is already a node there"
+                self.graph.focus_node.pos = pos
 
+            self.graph.draw(self.Canvas)
             self.Canvas.Draw()
             self.Canvas.ClearAll()
-            self.graph.draw(self.Canvas)
 
     def OnLeftUp(self, event):
         #stop selection
-        self.selected_node = None
+        #self.selected_node = None
+        self.graph.draw(self.Canvas)
         self.Canvas.Draw()
         self.Canvas.ClearAll()
-        self.graph.draw(self.Canvas)
 
-    # def isInSelectionRect(self):
-    #
-    #     x_bounds = (min(self.selection_pos_copy[0], self.release_pos[0]), max(self.selection_pos_copy[0], self.release_pos[0]))
-    #     # print x_bounds
-    #     y_bounds = (min(self.selection_pos_copy[1], self.release_pos[1]), max(self.selection_pos_copy[1], self.release_pos[1]))
-    #     # print y_bounds
-    #
-    #     for node in self.graph.nodes:
-    #         if node.pos[0] >= x_bounds[0] and node.pos[0] <= x_bounds[1]:
-    #             if node.pos[1] >= y_bounds[0] and node.pos[1] <= y_bounds[1]:
-    #                 print "the coordinates are", i, "and Ian is a Boss"
-    #                 self.selected_nodes.append(node)
 
 
 
@@ -174,21 +162,10 @@ class GraphDesignPanel(wx.Panel):
         self.Canvas = FloatCanvas.FloatCanvas(self)
 
 
-        ##CHANGE TO INITIALIZE WITH TOOLBAR BUTTON
-        ##self.firstClick = False
-
-        # ##BIND MOUSE EVENTS
-        # self.Canvas.Bind(FloatCanvas.EVT_LEFT_DOWN, self.onLeftDown)
-        # self.Canvas.Bind(FloatCanvas.EVT_MOTION, self.onMouseMove)
-        # ##BIND KEYBOARD EVENTS
-        # self.Canvas.Bind(wx.EVT_KEY_DOWN, self.onKeyDown)
-        # ## BIND CHAR EVENT
-        # self.Canvas.Bind(wx.EVT_CHAR, self.onCharEvent)
-
         # InitAll() sets everything in the Canvas to default state.
         # It can be used to reset the Canvas
         self.Canvas.InitAll()
-        self.Canvas.GridUnder = FloatCanvas.DotGrid((30,30), Size=3, Color="BLACK")
+        self.Canvas.GridUnder = FloatCanvas.DotGrid((grid_cell_size, grid_cell_size), Size=3, Color="BLACK")
 
         # This is all from Navcanvas, to keep funtionality, I'll take these calls to FloatCanvas.GUIMode and bind them
         # to the actual GUI Toolbar, later...
@@ -261,124 +238,10 @@ class GraphDesignPanel(wx.Panel):
     def SetMode(self, event):
         Mode = self.ModesDict[event.GetId()]
         self.Canvas.SetMode(Mode)
+        self.graph.draw(self.Canvas)
+        self.Canvas.Draw()
+        self.Canvas.ClearAll()
 
     def ZoomToFit(self,Event):
         self.Canvas.ZoomToBB()
         self.Canvas.SetFocus() # Otherwise the focus stays on the Button, and wheel events are lost.
-
-
-    ##LEFT CLICK EVENT HANDLER
-    # def onLeftDown(self, event):
-    #     ##skip the event
-    #     event.Skip()
-    #     if self.mode is modes.Design:
-    #         self.designMode(event)
-    #     elif self.mode is modes.Select:
-    #         self.selectMode(event)
-    #
-    # def selectMode(self, event):
-    #     pass
-    #
-    # def designMode(self, event):
-    #     ##get the position of the click
-    #     current_pos = getSnapPos(event.GetCoords())
-    #     ##if this is the first click
-    #     if self.firstClick is False:
-    #         self.firstClick = True
-    #         ##if there is already an node at the position in the graph
-    #         if not self.graph.addNode(current_pos):
-    #             self.graph.setFocus(current_pos)
-    #
-    #         self.graph.setFocus(current_pos)
-    #
-    #     ##otherwise it's the second click
-    #     else:
-    #         ##first add a node to the graph
-    #         if not self.graph.addNode(current_pos):
-    #             ##if there is already a node at that position then retreave it
-    #             newNode = self.graph.findNode(current_pos)
-    #         else:
-    #             newNode = self.graph.nodes[-1]
-    #
-    #         ##then create an edge between the this node and the focus node
-    #         if not self.graph.focus_node.addEdge(newNode):
-    #             ##if the edge exists then return
-    #             print "CANNOT ADD DUPLICATE EDGE"
-    #             return
-    #
-    #         else:
-    #             self.graph.setFocus(current_pos)
-    #
-    #     ##if some nodes have recently been undone and you are creating new nodes
-    #     if self.graph.undone_nodes:
-    #         ##officially delete the undone nodes
-    #         del self.graph.undone_nodes[:]
-    #
-    #     #because state has likely changes we ReDraw
-    #     self.draw
-
-    ##Handle Character Events
-    # def onCharEvent(self,event):
-    #     event.Skip()
-    #     ctrlDown = event.CmdDown()
-    #     keyCode = event.GetKeyCode()
-    #     ##is ctrl and 'Y' pressed
-    #     if ctrlDown and keyCode is 89:
-    #         self.graph.redo()
-    #         self.draw()
-    #     ##is ctrl and 'Z' presed
-    #     elif ctrlDown and keyCode is 90:
-    #         self.graph.undo()
-    #         self.draw()
-    #     #because state has likely changes we ReDraw
-    #     self.draw
-    #     ##other stuff
-    #
-    # def onMouseMove(self, event):
-    #     event.Skip()
-    #     if self.firstClick:
-    #         self.drawMotion(event)
-    #
-    #     ##other stuff
-    #
-    #
-    # def onKeyDown(self, event):
-    #     key_code = event.GetKeyCode()
-    #     if key_code == wx.WXK_ESCAPE:
-    #        self.firstClick = False
-    #        ##because of state change we draw
-    #        #self.draw()
-    #     event.Skip()
-    #
-    # ##to draw mouse movement between clicks
-    # def drawMotion(self, event):
-    #     self.newPos = getSnapPos(event.GetCoords())
-    #     coords = (self.graph.focus_node.pos , self.newPos)
-    #     self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
-    #     #we draw the graoh here because the state has most probably changed
-    #     self.draw()
-    #
-    # ##this uses BFT(breadth first traversal) to draw every node and
-    # ##edge in the graph
-    # def drawGraph(self):
-    #     for node in self.graph.nodes:
-    #         self.Canvas.AddCircle(
-    #             node.pos,
-    #             10,
-    #             LineWidth=1,
-    #             LineColor='BLACK',
-    #             FillColor='BLACK'
-    #         )
-    #         for edge in node._neighbors:
-    #             line = (node.pos, edge.node.pos)
-    #             self.Canvas.AddArrowLine(
-    #                 line, LineWidth=2,
-    #                 LineColor="RED",
-    #                 ArrowHeadSize=16
-    #             )
-    #
-    #
-    # def draw(self):
-    #     self.Canvas.Draw()
-    #     self.Canvas.ClearAll()
-    #     self.graph.drawGraph()

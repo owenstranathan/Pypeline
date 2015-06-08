@@ -132,13 +132,15 @@ class Graph():
     def findNode(self, label):				#
         for node in self.nodes:				#
             if node.label == label:			#
-                return node					#
+                return node                 #
+        return None             			#
                                             #	A findNode function for
     ##for finding a node by pos				#	both label and position is
     def findNode(self, pos):				#	unnessecary because
         for node in self.nodes:				#	two individual nodes
             if node.pos == pos:				#	should never have
-                return node					#	the same position
+                return node	                #	the same position
+        return None         				#
     #########################################
 
     ##set focus given position
@@ -168,7 +170,7 @@ class Graph():
         print "----------------------------------------------------------------"
         for node in self.nodes:
             neighbors = [neighbor.node.label for neighbor in node._neighbors]
-            print node.label, neighbors
+            print node.label, node.pos, "   ", neighbors
         print "----------------------------------------------------------------"
 
 

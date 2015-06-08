@@ -14,20 +14,26 @@ import numpy as N
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode, Resources
 
 
-##Can't use Python Enumerations in Python2.7 which is what wx uses
-##so we have to use a Hack
-def enum(*sequential, **named):
-    enums = dict(zip(sequential, range(len(sequential))), **named)
-    return type('Enum', (), enums)
+'''Global variables'''
 
-##enumeration for different input modes
-modes = enum('Select', 'Design')
+GRAPH_HEIGHT = 640
+GRAPH_WIDTH = 800
+GRAPH_SIZE = (GRAPH_WIDTH, GRAPH_HEIGHT)
+NODE_SIZE = 10
+grid_cell_size = 30
+
+
+def getSnapPos( arg_pos):
+    return (
+        grid_cell_size* round(arg_pos[0]/grid_cell_size),
+        grid_cell_size*round(arg_pos[1]/grid_cell_size)
+        )
 
 ##EDIT
 ##We are going to use the floatcanvas way of making GUIModes to switch
 ##between different ways of handling input(events)
 ##this is actually good OOP design because we are encapsulating
-##behaviors within the larger Deign panel class
+##behaviors within the larger Design panel class
 
 '''
     GUI Modes for DesignPanel
@@ -37,9 +43,11 @@ class GUIDesign(GUIMode.GUIBase):
     def __init__(self, canvas=None, graph=None):
         GUIMode.GUIBase.__init__(self, canvas)
         self.graph = graph
+        print self.graph
         self.firstClick = False
 
     def OnLeftDown(self, event):
+        self.graph.printGraph()
         ##get the position of the click
         current_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
         ##if this is the first click
@@ -98,22 +106,55 @@ class GUISelect(GUIMode.GUIBase):
     def __init__(self, canvas=None, graph=None):
         GUIMode.GUIBase.__init__(self, canvas)
         self.graph = graph
+        self.selected_node = None
+
+    def OnLeftDown(self, event):
+        #get the snap position of the selection
+        pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+        #get the node selected if infact a node was selected
+        #if there is no node at the click posistion then the
+        #self.selected_node will still be none
+        self.selected_node = self.graph.findNode(pos)
+        # print self.selected_node
+        # print self.graph.nodes[0]
+
+    def OnMove(self, event):
+        if self.selected_node and event.Dragging():
+            pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+            ##look for a node at the new position in the graph
+            ##if you get something back then you know
+            ##that you can't put the node there
+            other_node = self.graph.findNode(pos)
+            if not other_node:
+                self.selected_node.pos = pos
+            else:
+                print "there is already a node there"
+
+            self.Canvas.Draw()
+            self.Canvas.ClearAll()
+            self.graph.draw(self.Canvas)
+
+    def OnLeftUp(self, event):
+        #stop selection
+        self.selected_node = None
+        self.Canvas.Draw()
+        self.Canvas.ClearAll()
+        self.graph.draw(self.Canvas)
+
+    # def isInSelectionRect(self):
+    #
+    #     x_bounds = (min(self.selection_pos_copy[0], self.release_pos[0]), max(self.selection_pos_copy[0], self.release_pos[0]))
+    #     # print x_bounds
+    #     y_bounds = (min(self.selection_pos_copy[1], self.release_pos[1]), max(self.selection_pos_copy[1], self.release_pos[1]))
+    #     # print y_bounds
+    #
+    #     for node in self.graph.nodes:
+    #         if node.pos[0] >= x_bounds[0] and node.pos[0] <= x_bounds[1]:
+    #             if node.pos[1] >= y_bounds[0] and node.pos[1] <= y_bounds[1]:
+    #                 print "the coordinates are", i, "and Ian is a Boss"
+    #                 self.selected_nodes.append(node)
 
 
-'''Global variables'''
-
-GRAPH_HEIGHT = 640
-GRAPH_WIDTH = 800
-GRAPH_SIZE = (GRAPH_WIDTH, GRAPH_HEIGHT)
-NODE_SIZE = 10
-grid_cell_size = 30
-
-
-def getSnapPos( arg_pos):
-    return (
-        grid_cell_size* round(arg_pos[0]/grid_cell_size),
-        grid_cell_size*round(arg_pos[1]/grid_cell_size)
-        )
 
 
 ###############################################################################
@@ -132,8 +173,6 @@ class GraphDesignPanel(wx.Panel):
 
         self.Canvas = FloatCanvas.FloatCanvas(self)
 
-        ##default start the design panel is select mode
-        self.mode = modes.Design
 
         ##CHANGE TO INITIALIZE WITH TOOLBAR BUTTON
         ##self.firstClick = False
@@ -158,6 +197,7 @@ class GraphDesignPanel(wx.Panel):
                       ("Zoom Out", GUIMode.GUIZoomOut(), Resources.getMagMinusBitmap()),
                       ("Pan", GUIMode.GUIMove(),    Resources.getHandBitmap()),
                       ("Design", GUIDesign(self.Canvas, self.graph), Resources.getPointerBitmap()),
+                      ("Select", GUISelect(self.Canvas, self.graph), Resources.getHandBitmap()),
                       ]
 
 

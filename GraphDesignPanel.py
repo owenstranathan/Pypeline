@@ -206,7 +206,7 @@ class GraphDesignPanel(wx.Panel):
 
         tb.SetToolBitmapSize((24, 24))
         self.AddToolbarModeButtons(tb, self.Modes)
-        self.AddToolbarZoomButton(tb)
+
         tb.Realize()
 
     def AddToolbarModeButtons(self, tb, Modes):
@@ -218,12 +218,6 @@ class GraphDesignPanel(wx.Panel):
         #self.ZoomOutTool = tb.AddRadioTool(wx.ID_ANY, bitmap=Resources.getMagMinusBitmap(), shortHelp = "Zoom Out")
         #self.Bind(wx.EVT_TOOL, lambda evt : self.SetMode(Mode=self.GUIZoomOut), self.ZoomOutTool)
 
-    def AddToolbarZoomButton(self, tb):
-        tb.AddSeparator()
-
-        self.ZoomButton = wx.Button(tb, label="Zoom To Fit")
-        tb.AddControl(self.ZoomButton)
-        self.ZoomButton.Bind(wx.EVT_BUTTON, self.ZoomToFit)
 
 
     def HideShowHack(self):
@@ -241,7 +235,4 @@ class GraphDesignPanel(wx.Panel):
         self.graph.draw(self.Canvas)
         self.Canvas.Draw()
         self.Canvas.ClearAll()
-
-    def ZoomToFit(self,Event):
-        self.Canvas.ZoomToBB()
-        self.Canvas.SetFocus() # Otherwise the focus stays on the Button, and wheel events are lost.
+        self.graph.draw(self.Canvas)

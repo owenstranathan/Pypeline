@@ -23,7 +23,7 @@ NODE_SIZE = 10
 grid_cell_size = 30
 
 
-def getSnapPos( arg_pos):
+def getSnapPos(arg_pos):
     return (
         grid_cell_size* round(arg_pos[0]/grid_cell_size),
         grid_cell_size*round(arg_pos[1]/grid_cell_size)
@@ -43,7 +43,7 @@ def getSnapPos( arg_pos):
 DESIGN:
     THIS GUI MODE IS FOR ADDING NODES AND OTHERWIZE EXTENDING THE GRAPH
 """
-class GUIDesign(GUIMode.GUIBase):
+class GUIAddNodes(GUIMode.GUIBase):
     def __init__(self, canvas=None, graph=None):
         GUIMode.GUIBase.__init__(self, canvas)
         self.graph = graph
@@ -57,16 +57,16 @@ class GUIDesign(GUIMode.GUIBase):
             self.firstClick = True
             ##if there is already an node at the position in the graph
             if not self.graph.addNode(current_pos):
-                self.graph.setFocus(current_pos)
+                self.graph.setFocusByPos(current_pos)
 
-            self.graph.setFocus(current_pos)
+            self.graph.setFocusByPos(current_pos)
 
         ##otherwise it's the second click
         else:
             ##first add a node to the graph
             if not self.graph.addNode(current_pos):
                 ##if there is already a node at that position then retreave it
-                newNode = self.graph.findNode(current_pos)
+                newNode = self.graph.findNodeByPos(current_pos)
             else:
                 newNode = self.graph.nodes[-1]
 
@@ -76,7 +76,7 @@ class GUIDesign(GUIMode.GUIBase):
                 return
 
             else:
-                self.graph.setFocus(current_pos)
+                self.graph.setFocusByPos(current_pos)
 
         ##if some nodes have recently been undone and you are creating new nodes
         if self.graph.undone_nodes:
@@ -104,7 +104,7 @@ SELECTION
     THIS GUIMODE IS FOR SELECTING NODES ON A GRAPH AND MOVING THEM.
     LATER DELETION AND OTHER FORMS OF EDITING WILL BE SUPPORTED
 """
-class GUISelect(GUIMode.GUIBase):
+class GUISelectNode(GUIMode.GUIBase):
     def __init__(self, canvas=None, graph=None):
         GUIMode.GUIBase.__init__(self, canvas)
         self.graph = graph
@@ -117,7 +117,7 @@ class GUISelect(GUIMode.GUIBase):
         #if there is no node at the click posistion then the
         #self.selected_node will still be none
         #and the condition in OnMove will not be satisfied
-        self.selected_node = self.graph.focus_node = self.graph.findNode(pos)
+        self.selected_node = self.graph.focus_node = self.graph.findNodeByPos(pos)
 
 
     def OnMove(self, event):
@@ -126,7 +126,7 @@ class GUISelect(GUIMode.GUIBase):
             ##look for a node at the new position in the graph
             ##if you get something back then you know
             ##that you can't put the node there
-            other_node = self.graph.findNode(pos)
+            other_node = self.graph.findNodeByPos(pos)
             if not other_node:
                 self.graph.focus_node.pos = pos
 
@@ -142,8 +142,25 @@ class GUISelect(GUIMode.GUIBase):
         self.Canvas.ClearAll()
 
 
+class GUISelectEdge(GUIMode.GUIMouse):
+    def __init__(self, canvas = None, graph = None):
+        self.Canvas = canvas
+        self.graph = graph
+        self.selected_edge = None
 
 
+    def OnLeftDown(self, event):
+        pos = self.Canvas.PixelToWorld(event.GetPosition())
+        self.selected_edge = self.graph.getEdgeFromPoint(pos, margin=5)
+        print self.selected_edge
+        if self.selected_edge:
+            if self.graph.focus_edge:
+                self.graph.focus_edge.color = "RED"
+            self.graph.focus_edge = self.selected_edge
+            self.selected_edge.color = "GREEN"
+            self.graph.draw(self.Canvas)
+            self.Canvas.Draw()
+            self.Canvas.ClearAll()
 
 ###############################################################################
 ##UI GRAPH#####################################################################
@@ -169,13 +186,14 @@ class GraphDesignPanel(wx.Panel):
 
         # This is all from Navcanvas, to keep funtionality, I'll take these calls to FloatCanvas.GUIMode and bind them
         # to the actual GUI Toolbar, later...
-        self.Modes = [("Pointer",  GUIMode.GUIMouse(),   Resources.getPointerBitmap()),
+        self.Modes = [
+                      ("Add Nodes", GUIAddNodes(self.Canvas, self.graph), Resources.getPointerBitmap()),
                       ("Zoom In",  GUIMode.GUIZoomIn(),  Resources.getMagPlusBitmap()),
                       ("Zoom Out", GUIMode.GUIZoomOut(), Resources.getMagMinusBitmap()),
-                      ("Pan", GUIMode.GUIMove(),    Resources.getHandBitmap()),
-                      ("Design", GUIDesign(self.Canvas, self.graph), Resources.getPointerBitmap()),
-                      ("Select", GUISelect(self.Canvas, self.graph), Resources.getHandBitmap()),
-                      ]
+                      ("Pan",      GUIMode.GUIMove(),    Resources.getHandBitmap()),
+                      ("Select Nodes", GUISelectNode(self.Canvas, self.graph), Resources.getHandBitmap()),
+                      ("Select Edges", GUISelectEdge(self.Canvas, self.graph), Resources.getHandBitmap()),
+                     ]
 
 
         self.BuildToolbar()

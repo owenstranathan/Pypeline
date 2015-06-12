@@ -36,6 +36,21 @@ def CreateBitmap(xpm):
     return bmp
 
 
+##SOME ID CONSTANTS FOR DESIGN BUTTONS
+ID_NODES = wx.ID_HIGHEST + 1
+ID_VALVES = ID_NODES + 1
+ID_COMPRESSORS = ID_NODES + 2
+ID_REGULATORS = ID_NODES + 3
+ID_LOSS_ELEMENTS = ID_NODES + 4
+ID_ZOOM_IN = ID_NODES + 5
+ID_ZOOM_OUT = ID_NODES + 6
+ID_PAN = ID_NODES + 7
+ID_TOGGLE_MAP = ID_NODES + 8
+ID_SELECT = ID_NODES + 9
+ID_DELETE_NODE = ID_NODES + 10
+ID_UNDO = ID_NODES + 11
+ID_REDO = ID_NODES + 12
+
 ################################################################################################################################################
 ################################################################################################################################################
 ################################################################################################################################################
@@ -1663,7 +1678,7 @@ class PipeTabPanel(scrolled.ScrolledPanel):
 '''LEFT MENU MAIN CLASS (NOTEBOOK)'''
 class Notebook(wx.Notebook):
     """
-    Notebook class
+        Notebook class
     """
 
     #----------------------------------------------------------------------
@@ -1765,9 +1780,6 @@ class RibbonFrame(wx.Frame):
 
         panel = wx.Panel(self)
 
-        # DRAWING FRAMEWORK AND PANEL
-        self.graph = PypeGraph.Graph()
-        self.drawing_canvas = GDP.GraphDesignPanel(panel, self.graph)
 
         # TRYING TO ADD DROPDOWN MENU TO FIRST PANEL
         # http://wxpython.org/Phoenix/docs/html/lib.agw.ribbon.panel.RibbonPanel.html
@@ -1848,6 +1860,7 @@ class RibbonFrame(wx.Frame):
         # BUTTONS
         # Testen Sie the toggle :)
         # AddToggleButton(self, button_id, label, bitmap, help_string="")
+
 
         Settings_Group.AddSimpleButton(wx.ID_ANY, "General Settings", options_bmp1,
                                   "This is a tooltip for adding Nodes")
@@ -1951,42 +1964,45 @@ class RibbonFrame(wx.Frame):
         # drawing_tools = RB.RibbonButtonBar(_Element_Add)
 
         # ADDING BUTTONS TO RESPECTIVE BUTTON BAR
-        drawing_tools.AddSimpleButton(wx.ID_ANY, "Nodes", bmp1,
+
+
+        ##MAKE THE BUTTONS
+        drawing_tools.AddSimpleButton(ID_NODES, "Nodes", bmp1,
                                   "This is a tooltip for adding Nodes")
-        drawing_tools.AddSimpleButton(wx.ID_ANY, "Valves", bmp2,
+        drawing_tools.AddSimpleButton(ID_VALVES, "Valves", bmp1,
                                   "This is a tooltip for adding Valves")
-        drawing_tools.AddSimpleButton(wx.ID_ANY, "Compressors", bmp3,
+        drawing_tools.AddSimpleButton(ID_COMPRESSORS, "Compressors", bmp3,
                                   "This is a tooltip for adding Compressors")
-        drawing_tools.AddSimpleButton(wx.ID_ANY, "Regulators", bmp4,
+        drawing_tools.AddSimpleButton(ID_REGULATORS, "Regulators", bmp4,
                                   "This is a tooltip for adding Regulators")
-        drawing_tools.AddSimpleButton(wx.ID_ANY, "Loss Elements", bmp5,
+        drawing_tools.AddSimpleButton(ID_LOSS_ELEMENTS, "Loss Elements", bmp5,
                                   "This is a tooltip for adding Loss Elements")
 
 
-        viewing_tools.AddSimpleButton(wx.ID_ANY, "Zoom In", Resources.getMagPlusBitmap(),
+        viewing_tools.AddSimpleButton(ID_ZOOM_IN, "Zoom In", Resources.getMagPlusBitmap(),
                                   "This is a tooltip for zooming")
-        viewing_tools.AddSimpleButton(wx.ID_ANY, "Zoom Out", Resources.getMagMinusBitmap(),
+        viewing_tools.AddSimpleButton(ID_ZOOM_OUT, "Zoom Out", Resources.getMagMinusBitmap(),
                                   "This is a tooltip for zooming out")
-        viewing_tools.AddSimpleButton(wx.ID_ANY, "Panning", Resources.getHandBitmap(),
+        viewing_tools.AddSimpleButton(ID_PAN, "Panning", Resources.getHandBitmap(),
                                   "This is a tooltip for panning")
         # Make scale a text control, not a button
         # wx.TextCtrl( panel, -1, "Open" )
         viewing_tools.AddSimpleButton(wx.ID_ANY, "Scale", bmp6,
                                   "This is a tooltip to show the zoom percentage ")
-        viewing_tools.AddSimpleButton(wx.ID_ANY, "Map", bmp7,
+        viewing_tools.AddSimpleButton(ID_TOGGLE_MAP, "Map", bmp7,
                                   "This is a tooltip to display the embedded map")
 
 
-        general_tools.AddSimpleButton(wx.ID_ANY, "Element Selection Tool", bmp8,
+        general_tools.AddSimpleButton(ID_SELECT, "Element Selection/Move Tool", bmp8,
                                   "This is a tooltip for selecting")
-        general_tools.AddSimpleButton(wx.ID_ANY, "Drag", bmp9,
-                                  "This is a tooltip for dragging elements")
-        general_tools.AddSimpleButton(wx.ID_ANY, "Delete", bmp10,
+        general_tools.AddSimpleButton(ID_DELETE_NODE, "Delete", bmp10,
                                   "This is a tooltip for deleting elements")
-        general_tools.AddSimpleButton(wx.ID_ANY, "Undo", bmp11,
+        general_tools.AddSimpleButton(ID_UNDO, "Undo", bmp11,
                                   "This is a tooltip to undo")
-        general_tools.AddSimpleButton(wx.ID_ANY, "Redo", bmp12,
+        general_tools.AddSimpleButton(ID_REDO, "Redo", bmp12,
                                   "This is a tooltip to redo")
+
+
 
         Zoom_Text = wx.StaticText(_Zoom_Panel, -1, "Percentage Zoomed", (20, 120))
         Zoom_Text.SetBackgroundColour(wx.Colour(255, 251, 204))
@@ -2224,6 +2240,11 @@ class RibbonFrame(wx.Frame):
         # We added NotebookDemo for left side screen, testauipanel for design screen, testsearchcontrol for search buton
         self.notebook = Notebook(panel)
 
+        # DRAWING FRAMEWORK AND PANEL
+        self.graph = PypeGraph.Graph()
+        self.drawing_canvas = GDP.GraphDesignPanel(panel, self.graph)
+        # drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddNodesButtonClick, ID_NODES)
+
 
         # self.search_button = TestSearchCtrl(panel)
         self.search = TestSearchCtrl(panel)
@@ -2253,11 +2274,14 @@ class RibbonFrame(wx.Frame):
         self.BindEvents([toolbar_panel, _Element_Add])
         '''WE NEED TO ORGINIZED WAY PUTTING ALL THE IMAGES IN'''
 
+
         self.SetIcon(images.Mondrian.Icon)
 
         self.CenterOnScreen()
         self.Show()
 
+    def onAddNodesButtonClick(self, event):
+         self.Canvas.SetMode("Add Nodes")
     # FOR USE WITH FILE MENU BAR
     def OnQuit(self, e):
         self.Close()
@@ -2269,7 +2293,8 @@ class RibbonFrame(wx.Frame):
 
         design_bar, toolbar_panel = bars
 
-        design_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnDrawingPanelClick, id=-1)
+        ##design_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.OnDrawingPanelClick, id=-1)
+        #design_bar.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.drawing_canvas.SetMode("Add Nodes"), ID_NODES)
 
 
     def OnDrawingPanelClick(self, event):

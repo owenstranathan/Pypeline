@@ -28,11 +28,15 @@ CONTRACTS:
     1)
         duplicate edges are disallowed
 '''
+from wx.lib.floatcanvas import FloatCanvas
+import Geometry as Geom
+
 class Node():
     def __init__(self, pos, label):
         self.label = label
         self.pos = pos #a position on the cartesian plane
         self._neighbors = []  ##an empty list to hold edges, named neighbors
+        self.circle = None
         ##MORE...
 
     ##adds edge if it is not a duplicate
@@ -51,7 +55,13 @@ class Edge():
     def __init__(self, node, weight):
         self.node = node ##a neighboring node
         self.weight = weight ##a weight of the edge (i.e. distance from node to node)
+        self.line = None
+        self.color = "RED"
         ##MORE...
+
+    def Clicked(self, event):
+        print "FUCK"
+
 
 ###############################################################################
 ##GRAPH########################################################################
@@ -71,13 +81,15 @@ class Edge():
         the last node in the list
 '''
 NODE_SIZE = 10  ##the physical size of the node as drawn on the canvas
-
+LINE_SIZE = 6
 class Graph():
     def __init__(self):
         ##an empty list of nodes ( the adjacency list )
         self.nodes = []
         ##a node variable for node focus (the node being looked at)
         self.focus_node = None
+        ##an Edge variable to hold the focus edge
+        self.focus_edge = None
         ##a private integer for automatic id assignment
         self._node_id = 0
         ##undo history so that you can redo
@@ -130,14 +142,14 @@ class Graph():
 
     #########################################
     ##for finding a node by label			#
-    def findNode(self, label):				#
+    def findNodeByLable(self, label):		        #
         for node in self.nodes:				#
             if node.label == label:			#
                 return node                 #
         return None             			#
                                             #	A findNode function for
     ##for finding a node by pos				#	both label and position is
-    def findNode(self, pos):				#	unnessecary because
+    def findNodeByPos(self, pos):				#	unnessecary because
         for node in self.nodes:				#	two individual nodes
             if node.pos == pos:				#	should never have
                 return node	                #	the same position
@@ -145,13 +157,13 @@ class Graph():
     #########################################
 
     ##set focus given position
-    def setFocus(self, pos):
+    def setFocusByPos(self, pos):
         print pos
-        self.focus_node = self.findNode(pos)
+        self.focus_node = self.findNodeByPos(pos)
 
     ##set focus given position
-    def setFocus(self, label):
-        self.focus_node = self.findNode(label)
+    def setFocusByLable(self, label):
+        self.focus_node = self.findNodeByLable(label)
 
     ##resets the focus to the last node in the list
     def resetFocus(self):
@@ -225,10 +237,32 @@ class Graph():
                     self.resetFocus()
                     print self.focus_node.label
 
+
+    def getEdgeFromPoint(self, point, margin=8):
+        for node in self.nodes:
+            for edge in node._neighbors:
+                distance = Geom.distFromLineSeg(edge.line, point)
+                print distance
+                if distance  <= margin:
+                    print "Found edge"
+                    return edge
+                print "++++++++++++++"
+
+
+        return None
     ##this uses BFT(breadth first traversal) to draw every node and
     ##edge in the graph
     def draw(self, Canvas):
+        #this adds lines and circles to the graph
         for node in self.nodes:
+            for edge in node._neighbors:
+                line = (node.pos, edge.node.pos)
+                edge.line = line
+                Canvas.AddArrowLine(
+                    line, LineWidth=LINE_SIZE,
+                    LineColor=edge.color,
+                    ArrowHeadSize=16
+                )
             Canvas.AddCircle(
                 node.pos,
                 NODE_SIZE,
@@ -236,13 +270,7 @@ class Graph():
                 LineColor='BLACK',
                 FillColor='BLACK'
             )
-            for edge in node._neighbors:
-                line = (node.pos, edge.node.pos)
-                Canvas.AddArrowLine(
-                    line, LineWidth=2,
-                    LineColor="RED",
-                    ArrowHeadSize=16
-                )
+        ##This just puts a dotted square around the focus node
         if self.focus_node:
             focus_box_wh = (NODE_SIZE + 5, NODE_SIZE + 5 )
             focus_box_pos = (

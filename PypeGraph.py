@@ -59,8 +59,6 @@ class Edge():
         self.color = "RED"
         ##MORE...
 
-    def Clicked(self, event):
-        print "FUCK"
 
 
 ###############################################################################
@@ -158,7 +156,6 @@ class Graph():
 
     ##set focus given position
     def setFocusByPos(self, pos):
-        print pos
         self.focus_node = self.findNodeByPos(pos)
 
     ##set focus given position
@@ -242,11 +239,9 @@ class Graph():
         for node in self.nodes:
             for edge in node._neighbors:
                 distance = Geom.distFromLineSeg(edge.line, point)
-                print distance
                 if distance  <= margin:
-                    print "Found edge"
                     return edge
-                print "++++++++++++++"
+
 
 
         return None
@@ -258,11 +253,18 @@ class Graph():
             for edge in node._neighbors:
                 line = (node.pos, edge.node.pos)
                 edge.line = line
-                Canvas.AddArrowLine(
-                    line, LineWidth=LINE_SIZE,
-                    LineColor=edge.color,
-                    ArrowHeadSize=16
-                )
+                if edge is self.focus_edge:
+                    Canvas.AddArrowLine(
+                        line, LineWidth=LINE_SIZE,
+                        LineColor = "GREEN",
+                        ArrowHeadSize=16
+                    )
+                else:
+                    Canvas.AddArrowLine(
+                        line, LineWidth=LINE_SIZE,
+                        LineColor="RED",
+                        ArrowHeadSize=16
+                    )
             Canvas.AddCircle(
                 node.pos,
                 NODE_SIZE,

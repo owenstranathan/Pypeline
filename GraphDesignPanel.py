@@ -152,12 +152,8 @@ class GUISelectEdge(GUIMode.GUIMouse):
     def OnLeftDown(self, event):
         pos = self.Canvas.PixelToWorld(event.GetPosition())
         self.selected_edge = self.graph.getEdgeFromPoint(pos, margin=5)
-        print self.selected_edge
         if self.selected_edge:
-            if self.graph.focus_edge:
-                self.graph.focus_edge.color = "RED"
             self.graph.focus_edge = self.selected_edge
-            self.selected_edge.color = "GREEN"
             self.graph.draw(self.Canvas)
             self.Canvas.Draw()
             self.Canvas.ClearAll()

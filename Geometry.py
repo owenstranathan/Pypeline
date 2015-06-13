@@ -3,6 +3,8 @@
 ##GEOMETRY#####################################################################
 ###############################################################################
 
+##this function returns True if the point is in the domain of the
+##line segment and false otherwise
 def isInDomain(line, point):
     Ax = line[0][0]
     Ay = line[0][1]
@@ -19,6 +21,8 @@ def isInDomain(line, point):
     else:
         return False
 
+##this function returns True if the point is in the range of the
+##line segment, and False otherwise
 def isInRange(line, point):
     Ax = line[0][0]
     Ay = line[0][1]
@@ -35,6 +39,9 @@ def isInRange(line, point):
     else:
         return False
 
+##this function returns the (shortest)distance from point to line
+##if the point is not in the line segment's domain or range then
+##the function returns 1000 as the distance
 def distFromLineSeg( line, point):
     Ax = line[0][0]
     Ay = line[0][1]
@@ -59,12 +66,10 @@ def distFromLineSeg( line, point):
     '''
     ##Case 1
     if delta_x == 0:
-        print "Vertical"
         if isInRange(line,point):
             distance = abs(Ax - Cx)
     ##Case 2
     elif delta_y == 0:
-        print "Horizontal"
         if isInDomain(line, point):
             distance = abs(Ay-Cy)
     ##Case 3
@@ -72,7 +77,6 @@ def distFromLineSeg( line, point):
         if isInRange(line,point):
             if isInDomain(line, point):
 
-                print "Other"
                 ##Slope of the line
                 line_m = (Ay-By)/(Ax-Bx)
 

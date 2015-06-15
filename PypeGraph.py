@@ -79,7 +79,7 @@ class Edge():
         the last node in the list
 '''
 NODE_SIZE = 10  ##the physical size of the node as drawn on the canvas
-LINE_SIZE = 6
+LINE_SIZE = 5
 class Graph():
     def __init__(self):
         ##an empty list of nodes ( the adjacency list )

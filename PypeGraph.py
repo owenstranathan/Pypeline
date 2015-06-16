@@ -36,7 +36,7 @@ class Node():
         self.label = label
         self.pos = pos #a position on the cartesian plane
         self._neighbors = []  ##an empty list to hold edges, named neighbors
-        self.circle = None
+
         ##MORE...
 
     ##adds edge if it is not a duplicate
@@ -92,7 +92,6 @@ class Graph():
         self._node_id = 0
         ##undo history so that you can redo
         self.undone_nodes = []
-
 
 
 

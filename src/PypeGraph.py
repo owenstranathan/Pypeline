@@ -305,16 +305,16 @@ class Graph():
                     LineColor='RED',
                     FillColor='RED'
                 )
-        ##This just puts a dotted square around the focus node
-        if self.focus_node:
-            focus_box_wh = (NODE_SIZE + 5, NODE_SIZE + 5 )
-            focus_box_pos = (
-                self.focus_node.pos[0]-(NODE_SIZE+5)/2 ,
-                self.focus_node.pos[1] - (NODE_SIZE+5)/2 )
-            Canvas.AddRectangle(
-                focus_box_pos,
-                focus_box_wh,
-                LineStyle="Dot",
-                LineWidth=2,
-                LineColor='BLACK'
-                )
+        # ##This just puts a dotted square around the focus node
+        # if self.focus_node:
+        #     focus_box_wh = (NODE_SIZE + 5, NODE_SIZE + 5 )
+        #     focus_box_pos = (
+        #         self.focus_node.pos[0]-(NODE_SIZE+5)/2 ,
+        #         self.focus_node.pos[1] - (NODE_SIZE+5)/2 )
+        #     Canvas.AddRectangle(
+        #         focus_box_pos,
+        #         focus_box_wh,
+        #         LineStyle="Dot",
+        #         LineWidth=2,
+        #         LineColor='BLACK'
+        #         )

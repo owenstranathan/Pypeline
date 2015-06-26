@@ -78,7 +78,7 @@ class ListModel(dv.PyDataViewIndexListModel):
             node = self.data[row][1]
             message = "Are you sure you want to delete '" + node + "'"
             decision = wx.MessageBox(message, 'Deletion Warning!', wx.OK | wx.CANCEL)
-            print decision
+            # print decision
             if decision == wx.OK:
                 # remove it from our data structure
                 del self.data[row]

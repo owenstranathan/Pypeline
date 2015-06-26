@@ -55,33 +55,13 @@ class GUIAddNodes(GUIMode.GUIBase):
 
         ##get the position of the click
         current_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
-        ##if this is the first click
-        if self.firstClick is False:
-            self.firstClick = True
-            ##if there is already an node at the position in the graph
-            if not self.graph.addNode(current_pos):
-                self.graph.setFocusByPos(current_pos)
 
+        if not self.graph.addNode(current_pos):
             self.graph.setFocusByPos(current_pos)
 
-        ##otherwise it's the second click
-        else:
-            ##first add a node to the graph
-            if not self.graph.addNode(current_pos):
-                ##if there is already a node at that position then retreave it
-                newNode = self.graph.findNodeByPos(current_pos)
-            else:
-                newNode = self.graph.nodes[-1]
+        self.graph.setFocusByPos(current_pos)
 
-            ##then create an edge between the this node and the focus node
-            if not self.graph.focus_node.addEdge(newNode):
-                ##if the edge exists then return
-                return
 
-            else:
-                self.graph.setFocusByPos(current_pos)
-
-            self.firstClick = False
         ##if some nodes have recently been undone and you are creating new nodes
         if self.graph.undone_nodes:
             ##officially delete the undone nodes
@@ -92,38 +72,75 @@ class GUIAddNodes(GUIMode.GUIBase):
         self.Canvas.Draw()
         self.Canvas.ClearAll(ResetBB=False)
 
+
+"""
+ADD PIPES
+    THIS GUI MODE IS FOR ADDING PIPES BETWEEN NODES
+"""
+
+class GUIAddPipes(GUIMode.GUIBase):
+    def __init__(self, canvas=None, graph=None):
+        GUIMode.GUIBase.__init__(self, canvas)
+        self.graph = graph
+        self.firstNode = None
+        self.secondNode = None
+
+    def OnLeftDown(self, event):
+
+        ##get the position of the click
+        current_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+        ##if this is the first click
+        if not self.firstNode:
+            ##if there is already an node at the position in the graph
+            self.firstNode = self.graph.findNodeByPos(current_pos)
+
+        ##otherwise it's the second click
+        else:
+            ##first add a node to the graph
+            self.secondNode = self.graph.findNodeByPos(current_pos)
+
+        ##if some nodes have recently been undone and you are creating new nodes
+        if self.graph.undone_nodes:
+            ##officially delete the undone nodes
+            del self.graph.undone_nodes[:]
+
+        #because state has likely changes we ReDraw
+        self.graph.draw(self.Canvas)
+        self.Canvas.Draw()
+        self.Canvas.ClearAll(ResetBB=False)
+
+    def OnLeftUp(self, event):
+        if self.firstNode and self.secondNode and (self.firstNode is not self.secondNode):
+            if self.firstNode.addEdge(self.secondNode):
+                self.firstNode = self.secondNode = None
+            else:
+                print "cannot add edge"
+                self.secondNode = None
+        self.graph.draw(self.Canvas)
+        self.Canvas.Draw()
+        self.Canvas.ClearAll(ResetBB=False)
+
+
     def OnMove(self, event):
-        if self.firstClick:
+        if self.firstNode:
             newPos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
-            coords = (self.graph.focus_node.pos , newPos)
+            coords = (self.firstNode.pos , newPos)
             self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
             #we draw the graoh here because the state has most probably changed
             self.graph.draw(self.Canvas)
             self.Canvas.Draw()
             self.Canvas.ClearAll(ResetBB=False)
 
+"""
+ADD NON-PIPE ELEMENTS
+    THIS GUI MODE WILL ADD NON-PIPE ELEMENTS TO THE PIPES
+"""
+class GUIAddNonPipeElement(GUIMode.GUIBase):
+    def __init__(self, canvas=None, graph=None):
+        GUIMode.GUIBase.__init__(self, canvas)
+        self.graph = graph
 
-"""
-ADD PIPES
-    THIS GUI MODE IS FOR ADDING PIPES BETWEEN NODES
-"""
-#
-# class GUIAddPipes(GUIMode.GUIBase):
-#     def __init__(self, canvas=None, graph=None):
-#         GUIMode.GUIBase.__init__(self, canvas)
-#         self.graph = graph
-#
-#     def OnLeftDown(self, event):
-#
-#     def OnMove(self, event):
-#         if self.firstClick:
-#             newPos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
-#             coords = (self.graph.focus_node.pos , newPos)
-#             self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
-#             #we draw the graoh here because the state has most probably changed
-#             self.graph.draw(self.Canvas)
-#             self.Canvas.Draw()
-#             self.Canvas.ClearAll(ResetBB=False)
+
 
 """
 SELECTION
@@ -149,8 +166,11 @@ class GUISelect(GUIMode.GUIBase):
 
         if edge:
             self.selection = self.graph.focus_edge = edge
+            self.graph.focus_node = None
         elif node:
             self.selection = self.graph.focus_node = node
+            self.graph.focus_edge = None
+
 
         self.graph.draw(self.Canvas)
         self.Canvas.Draw()
@@ -183,16 +203,23 @@ class GUIMove(GUIMode.GUIMouse):
         self.Canvas = canvas
         self.graph = graph
         self.allow_move = False
+        self.premove_pos = None
+        self.decision = None
 
     def OnLeftDown(self, event):
+
         focus = self.graph.focus_node
         if focus:
             pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
             if pos == focus.pos:
                 self.allow_move = True
+                self.premove_pos = self.graph.focus_node.pos
+
 
     def OnMove(self, event):
         if self.graph.focus_node and event.Dragging() and self.allow_move:
+
+
             pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
 
             ##look for a node at the new position in the graph
@@ -202,14 +229,37 @@ class GUIMove(GUIMode.GUIMouse):
             if not other_node:
                 self.graph.focus_node.pos = pos
 
-
-
+            #we draw the graoh here because the state has most probably changed
             self.graph.draw(self.Canvas)
             self.Canvas.Draw()
             self.Canvas.ClearAll(ResetBB=False)
 
 
     def OnLeftUp(self, event):
+        if self.allow_move:
+            ## We want the message to be current to the present focus so the message must be reset here.
+            self.message = "Moving node " + str(self.graph.focus_node.label)
+            self.message += " will delete all the non-pipe elements on pipes "
+            self.message += "connected to it. Are you sure you want to move this node?"
+            self.message += " Press 'Ok' to continue moving it"
+
+            if self.graph.focus_node.pos != self.premove_pos:
+                self.decision = wx.MessageBox(self.message, "Move Warning!", wx.OK | wx.CANCEL )
+                ## if the decision is ok then make the change
+                if self.decision == wx.OK:
+
+                    for node in self.graph.nodes:
+                        for edge in node._neighbors:
+                            if edge.node == self.graph.focus_node:
+                                del edge.elements [:]
+
+                    for edge in self.graph.focus_node._neighbors:
+                        del edge.elements[:]
+
+            if self.decision == wx.CANCEL:
+                self.graph.focus_node.pos = self.premove_pos
+
+
         self.allow_move = False
         self.graph.draw(self.Canvas)
         self.Canvas.Draw()
@@ -243,6 +293,7 @@ class GraphDesignPanel(wx.Panel):
         # to the actual GUI Toolbar, later...
         self.Modes = {
                       "AddNodes": GUIAddNodes(self.Canvas, self.graph),
+                      "AddPipes": GUIAddPipes(self.Canvas, self.graph),
                       "ZoomIn" :  GUIMode.GUIZoomIn(),
                       "ZoomOut": GUIMode.GUIZoomOut(),
                       "Pan" :  GUIMode.GUIMove(),

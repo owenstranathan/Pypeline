@@ -62,80 +62,8 @@ class Edge():
         self.elements = []
 
     def setLine(self, new_line):
-        if not self.line or self.line == new_line:
-            self.line = new_line
-            return
-
         self.line = new_line
-        # for element in self.elements:
-        #
-        #     A = self.line[0]
-        #     B = self.line[1]
-        #     C = new_line[0]
-        #     D = new_line[1]
-        #     # print "Old Line: [", A, ",",B, "]"
-        #     # print "New Line: [", C, ",",D, "]"
-        #     # print "Element at ", element.pos
-        #     ratio = Geom.dist(A, element.pos)/Geom.dist(B, element.pos)
-        #     # print ratio
-        #     # print Geom.dist(C, D)
-        #     r = ratio * Geom.dist(C, D)
-        #     # print r
-        #
-        #
-        #
-        #
-        #     o = abs(A[1] - B[1])
-        #     a = abs(A[0] - B[0])
-        #     # print o
-        #     # print a
-        #     theta = math.atan(o/a)
-        #
-        #     x = r * math.cos(theta)
-        #     y = r * math.sin(theta)
-        #
-        #     element.pos = (x,y)
-        #     self.line = new_line
-        #     print "Element at ", element.pos
 
-        # # when we change the line we have to change the position of
-        # # all the elements aswell
-        # new_delta_x = (self.line[0][0]-self.line[1][0])
-        # new_delta_y = (self.line[0][1]-self.line[1][1])
-        # old_delta_x = (new_line[0][0]-new_line[1][0])
-        # old_delta_y = (new_line[0][1]-new_line[1][1])
-        #
-        # # if new_delta_x == 0 or new_delta_y == 0:
-        #
-        # old_m = new_delta_y/new_delta_x
-        # new_m = old_delta_y/old_delta_x
-        #
-        # if old_m == new_m:
-        #     dx1 = self.line[0][0] - new_line[0][0]
-        #     dx2 = self.line[1][0] - new_line[1][0]
-        #     print dx1, " ", dx2
-        #     if abs(dx1) > abs(dx2):
-        #         dx = dx1
-        #     else:
-        #         dx = dx2
-        #
-        #     dy1 = self.line[0][1] - new_line[0][1]
-        #     dy2 = self.line[1][1] - new_line[1][1]
-        #     print dy1, " ", dy2
-        #     if abs(dy1) > abs(dy2):
-        #         dy = dy1
-        #     else:
-        #         dy = dy2
-        #
-        #
-        #     print dx, ", ", dy
-        #     for element in self.elements:
-        #         new_x = element.pos[0] + dx
-        #         new_y = element.pos[1] + dy
-        #         element.pos = (new_x,new_y)
-        #
-        #
-        #     self.line = new_line
 
 
 
@@ -169,6 +97,7 @@ class Graph():
     def __init__(self):
         ##an empty list of nodes ( the adjacency list )
         self.nodes = []
+        ## An empty list of edges ( Node tuples )
         ##a node variable for node focus (the node being looked at)
         self.focus_node = None
         ##an Edge variable to hold the focus edge
@@ -199,6 +128,7 @@ class Graph():
         self.nodes.append(arg_node)
         return True
 
+
     ##deleting a node is alittle more complicated
     ##useing something similar to BFT
     ##python is weird and my c++ brain doesn't understand
@@ -219,6 +149,7 @@ class Graph():
         if self.focus_node.label == label:
             if not self.nodes:
                 print "graph empty"
+                self.focus_node = None
             else:
                 self.focus_node = self.nodes[-1]
 
@@ -358,13 +289,22 @@ class Graph():
                         FillColor="Blue"
                         )
         for node in self.nodes:
-            Canvas.AddCircle(
-                node.pos,
-                NODE_SIZE,
-                LineWidth=1,
-                LineColor='BLACK',
-                FillColor='BLACK'
-            )
+            if node is self.focus_node:
+                Canvas.AddCircle(
+                    node.pos,
+                    NODE_SIZE,
+                    LineWidth=1,
+                    LineColor='GREEN',
+                    FillColor='GREEN'
+                )
+            else:
+                Canvas.AddCircle(
+                    node.pos,
+                    NODE_SIZE,
+                    LineWidth=1,
+                    LineColor='RED',
+                    FillColor='RED'
+                )
         ##This just puts a dotted square around the focus node
         if self.focus_node:
             focus_box_wh = (NODE_SIZE + 5, NODE_SIZE + 5 )

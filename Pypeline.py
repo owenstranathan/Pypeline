@@ -35,19 +35,20 @@ def CreateBitmap(xpm):
 ##SOME ID CONSTANTS FOR DESIGN BUTTONS
 
 ID_NODES = wx.ID_HIGHEST + 1
-ID_VALVES = ID_NODES + 1
-ID_COMPRESSORS = ID_NODES + 2
-ID_REGULATORS = ID_NODES + 3
-ID_LOSS_ELEMENTS = ID_NODES + 4
-ID_ZOOM_IN = ID_NODES + 5
-ID_ZOOM_OUT = ID_NODES + 6
-ID_PAN = ID_NODES + 7
-ID_TOGGLE_MAP = ID_NODES + 8
-ID_SELECT = ID_NODES + 9
-ID_MOVE = ID_NODES + 10
-ID_DELETE = ID_NODES + 11
-ID_UNDO = ID_NODES + 12
-ID_REDO = ID_NODES + 13
+ID_PIPES = ID_NODES + 1
+ID_VALVES = ID_NODES + 2
+ID_COMPRESSORS = ID_NODES + 3
+ID_REGULATORS = ID_NODES + 4
+ID_LOSS_ELEMENTS = ID_NODES + 5
+ID_ZOOM_IN = ID_NODES + 6
+ID_ZOOM_OUT = ID_NODES + 7
+ID_PAN = ID_NODES + 8
+ID_TOGGLE_MAP = ID_NODES + 9
+ID_SELECT = ID_NODES + 10
+ID_MOVE = ID_NODES + 11
+ID_DELETE = ID_NODES + 12
+ID_UNDO = ID_NODES + 13
+ID_REDO = ID_NODES + 14
 
 ################################################################################################################################################
 ################################################################################################################################################
@@ -340,19 +341,19 @@ class RibbonFrame(wx.Frame):
 
         # BUTTON ICONS
         # CHANGE CHANGE CHANGE
-        options_bmp1 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp2 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp3 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp4 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp5 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp6 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp7 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp8 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp9 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp10 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp11 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp12 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp13 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp1 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp2 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp3 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp4 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp5 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp6 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp7 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp8 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp9 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp10 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp11 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp12 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp13 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
         # BUTTONS
         # Testen Sie the toggle :)
@@ -401,10 +402,10 @@ class RibbonFrame(wx.Frame):
 
         # BUTTON ICONS
         # CHANGE CHANGE CHANGE
-        options_bmp1 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp2 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp3 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp4 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp1 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp2 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp3 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp4 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
 
         # BUTTONS
@@ -432,22 +433,23 @@ class RibbonFrame(wx.Frame):
 
         # ICONS for drawing_tools
         # PLEASE CHANGE ALL BMP ICON NAMES TO REFLECT RELATIVE PANEL
-        bmp1= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp2= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp3= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp4= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp5= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_nodes= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_pipes = wx.Image("icons/design.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_valves= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_compressors= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_regulators= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_loss_ele= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
         # ICONS for viewing_tools
-        bmp6= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp7= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp6= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp7= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
         # ICONS for general tools
-        bmp8= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp9= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp10= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp11= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp12= wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_select= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_move= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_delete= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_undo= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_redo= wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
         # PANELS IN DESIGN RIBBON PAGE
         _Element_Add = RB.RibbonPanel(Design, wx.ID_ANY, "Add Element", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
@@ -462,15 +464,17 @@ class RibbonFrame(wx.Frame):
         # drawing_tools = RB.RibbonButtonBar(_Element_Add)
 
         ##MAKE THE BUTTONS
-        drawing_tools.AddSimpleButton(ID_NODES, "Nodes", bmp1,
+        drawing_tools.AddSimpleButton(ID_NODES, "Nodes", bmp_nodes,
                                   "This is a tooltip for adding Nodes")
-        drawing_tools.AddSimpleButton(ID_VALVES, "Valves", bmp1,
+        drawing_tools.AddSimpleButton(ID_PIPES, "Pipes", bmp_nodes,
+                                  "This is a tooltip for adding Pipes")
+        drawing_tools.AddSimpleButton(ID_VALVES, "Valves", bmp_valves,
                                   "This is a tooltip for adding Valves")
-        drawing_tools.AddSimpleButton(ID_COMPRESSORS, "Compressors", bmp3,
+        drawing_tools.AddSimpleButton(ID_COMPRESSORS, "Compressors", bmp_compressors,
                                   "This is a tooltip for adding Compressors")
-        drawing_tools.AddSimpleButton(ID_REGULATORS, "Regulators", bmp4,
+        drawing_tools.AddSimpleButton(ID_REGULATORS, "Regulators", bmp_regulators,
                                   "This is a tooltip for adding Regulators")
-        drawing_tools.AddSimpleButton(ID_LOSS_ELEMENTS, "Loss Elements", bmp5,
+        drawing_tools.AddSimpleButton(ID_LOSS_ELEMENTS, "Loss Elements", bmp_loss_ele,
                                   "This is a tooltip for adding Loss Elements")
 
 
@@ -481,15 +485,15 @@ class RibbonFrame(wx.Frame):
         viewing_tools.AddSimpleButton(ID_PAN, "Panning", Resources.getHandBitmap(),
                                   "This is a tooltip for panning")
 
-        general_tools.AddSimpleButton(ID_SELECT, "Select", bmp8,
+        general_tools.AddSimpleButton(ID_SELECT, "Select", bmp_select,
                                   "This is a tooltip for selecting")
-        general_tools.AddSimpleButton(ID_MOVE, "Move", bmp9,
+        general_tools.AddSimpleButton(ID_MOVE, "Move", bmp_move,
                                   "This is a tooltip for selecting")
-        general_tools.AddSimpleButton(ID_DELETE, "Delete", bmp10,
+        general_tools.AddSimpleButton(ID_DELETE, "Delete", bmp_delete,
                                   "This is a tooltip for deleting elements")
-        general_tools.AddSimpleButton(ID_UNDO, "Undo", bmp11,
+        general_tools.AddSimpleButton(ID_UNDO, "Undo", bmp_undo,
                                   "This is a tooltip to Undo")
-        general_tools.AddSimpleButton(ID_REDO, "Redo", bmp12,
+        general_tools.AddSimpleButton(ID_REDO, "Redo", bmp_redo,
                                   "This is a tooltip to Redo")
 
         ################################################################################################################################################
@@ -513,13 +517,13 @@ class RibbonFrame(wx.Frame):
 
         # BUTTON ICONS
         # CHANGE CHANGE CHANGE
-        sim_bmp1 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        sim_bmp2 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        sim_bmp3 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        sim_bmp4 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        sim_bmp5 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        sim_bmp6 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        sim_bmp7 = wx.Image("design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        sim_bmp1 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        sim_bmp2 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        sim_bmp3 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        sim_bmp4 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        sim_bmp5 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        sim_bmp6 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        sim_bmp7 = wx.Image("icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
         ########################################################################
         # GENERAL PANEL
@@ -754,6 +758,7 @@ class RibbonFrame(wx.Frame):
         # OR NEED TO COMBINE FUNCTIONALITY
 
         drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddNodesButtonClick, id=ID_NODES)
+        drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddPipesButtonClick, id=ID_PIPES)
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onZoomInButtonClick, id=ID_ZOOM_IN )
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onZoomOutButtonClick, id=ID_ZOOM_OUT )
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onPanButtonClick, id=ID_PAN )
@@ -783,6 +788,10 @@ class RibbonFrame(wx.Frame):
 
     def onAddNodesButtonClick(self, event):
         self.drawing_canvas.SetMode("AddNodes")
+        return
+
+    def onAddPipesButtonClick(self, event):
+        self.drawing_canvas.SetMode("AddPipes")
         return
 
     def onZoomInButtonClick(self, event):

@@ -12,7 +12,8 @@
 import wx
 import numpy as N
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode, Resources
-
+import PypeGraph as PG
+import Geometry as Geom
 
 '''Global variables'''
 
@@ -39,6 +40,7 @@ def getSnapPos(arg_pos):
     GUI Modes for DesignPanel
 '''
 
+
 """
 DESIGN:
     THIS GUI MODE IS FOR ADDING NODES AND OTHERWIZE EXTENDING THE GRAPH
@@ -50,6 +52,7 @@ class GUIAddNodes(GUIMode.GUIBase):
         self.firstClick = False
 
     def OnLeftDown(self, event):
+
         ##get the position of the click
         current_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
         ##if this is the first click
@@ -78,6 +81,7 @@ class GUIAddNodes(GUIMode.GUIBase):
             else:
                 self.graph.setFocusByPos(current_pos)
 
+            self.firstClick = False
         ##if some nodes have recently been undone and you are creating new nodes
         if self.graph.undone_nodes:
             ##officially delete the undone nodes
@@ -86,7 +90,7 @@ class GUIAddNodes(GUIMode.GUIBase):
         #because state has likely changes we ReDraw
         self.graph.draw(self.Canvas)
         self.Canvas.Draw()
-        self.Canvas.ClearAll()
+        self.Canvas.ClearAll(ResetBB=False)
 
     def OnMove(self, event):
         if self.firstClick:
@@ -96,33 +100,101 @@ class GUIAddNodes(GUIMode.GUIBase):
             #we draw the graoh here because the state has most probably changed
             self.graph.draw(self.Canvas)
             self.Canvas.Draw()
-            self.Canvas.ClearAll()
+            self.Canvas.ClearAll(ResetBB=False)
 
+
+"""
+ADD PIPES
+    THIS GUI MODE IS FOR ADDING PIPES BETWEEN NODES
+"""
+#
+# class GUIAddPipes(GUIMode.GUIBase):
+#     def __init__(self, canvas=None, graph=None):
+#         GUIMode.GUIBase.__init__(self, canvas)
+#         self.graph = graph
+#
+#     def OnLeftDown(self, event):
+#
+#     def OnMove(self, event):
+#         if self.firstClick:
+#             newPos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+#             coords = (self.graph.focus_node.pos , newPos)
+#             self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
+#             #we draw the graoh here because the state has most probably changed
+#             self.graph.draw(self.Canvas)
+#             self.Canvas.Draw()
+#             self.Canvas.ClearAll(ResetBB=False)
 
 """
 SELECTION
     THIS GUIMODE IS FOR SELECTING NODES ON A GRAPH AND MOVING THEM.
     LATER DELETION AND OTHER FORMS OF EDITING WILL BE SUPPORTED
 """
-class GUISelectNode(GUIMode.GUIBase):
+class GUISelect(GUIMode.GUIBase):
     def __init__(self, canvas=None, graph=None):
         GUIMode.GUIBase.__init__(self, canvas)
         self.graph = graph
-        self.selected_node = None
+        self.selection = None
 
     def OnLeftDown(self, event):
         #get the snap position of the selection
-        pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+        snap_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+        real_pos = self.Canvas.PixelToWorld(event.GetPosition())
         #get the node selected if infact a node was selected
         #if there is no node at the click posistion then the
         #self.selected_node will still be none
         #and the condition in OnMove will not be satisfied
-        self.selected_node = self.graph.focus_node = self.graph.findNodeByPos(pos)
+        node = self.graph.findNodeByPos(snap_pos)
+        edge = self.graph.getEdgeFromPoint(real_pos, margin = 4)
 
+        if edge:
+            self.selection = self.graph.focus_edge = edge
+        elif node:
+            self.selection = self.graph.focus_node = node
+
+        self.graph.draw(self.Canvas)
+        self.Canvas.Draw()
+        self.Canvas.ClearAll(ResetBB=False)
+
+    # def OnMove(self, event):
+    #     if self.graph.focus_node and event.Dragging():
+    #         pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+    #         ##look for a node at the new position in the graph
+    #         ##if you get something back then you know
+    #         ##that you can't put the node there
+    #         other_node = self.graph.findNodeByPos(pos)
+    #         if not other_node:
+    #             self.graph.focus_node.pos = pos
+    #
+    #         self.graph.draw(self.Canvas)
+    #         self.Canvas.Draw()
+    #         self.Canvas.ClearAll(ResetBB=False)
+
+    def OnLeftUp(self, event):
+        #stop selection
+        #self.selected_node = None
+        self.graph.draw(self.Canvas)
+        self.Canvas.Draw()
+        self.Canvas.ClearAll(ResetBB=False)
+
+
+class GUIMove(GUIMode.GUIMouse):
+    def __init__(self, canvas = None, graph = None):
+        self.Canvas = canvas
+        self.graph = graph
+        self.allow_move = False
+
+    def OnLeftDown(self, event):
+        focus = self.graph.focus_node
+        if focus:
+            pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+            if pos == focus.pos:
+                self.allow_move = True
 
     def OnMove(self, event):
-        if self.selected_node and event.Dragging():
+        if self.graph.focus_node and event.Dragging() and self.allow_move:
             pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
+
             ##look for a node at the new position in the graph
             ##if you get something back then you know
             ##that you can't put the node there
@@ -130,32 +202,19 @@ class GUISelectNode(GUIMode.GUIBase):
             if not other_node:
                 self.graph.focus_node.pos = pos
 
+
+
             self.graph.draw(self.Canvas)
             self.Canvas.Draw()
-            self.Canvas.ClearAll()
+            self.Canvas.ClearAll(ResetBB=False)
+
 
     def OnLeftUp(self, event):
-        #stop selection
-        #self.selected_node = None
+        self.allow_move = False
         self.graph.draw(self.Canvas)
         self.Canvas.Draw()
-        self.Canvas.ClearAll()
+        self.Canvas.ClearAll(ResetBB=False)
 
-
-class GUISelectEdge(GUIMode.GUIMouse):
-    def __init__(self, canvas = None, graph = None):
-        self.Canvas = canvas
-        self.graph = graph
-        self.selected_edge = None
-
-    def OnLeftDown(self, event):
-        pos = self.Canvas.PixelToWorld(event.GetPosition())
-        self.selected_edge = self.graph.getEdgeFromPoint(pos, margin=5)
-        if self.selected_edge:
-            self.graph.focus_edge = self.selected_edge
-            self.graph.draw(self.Canvas)
-            self.Canvas.Draw()
-            self.Canvas.ClearAll()
 
 ###############################################################################
 ##UI GRAPH#####################################################################
@@ -174,6 +233,7 @@ class GraphDesignPanel(wx.Panel):
         self.Canvas = FloatCanvas.FloatCanvas(self)
 
 
+
         # InitAll() sets everything in the Canvas to default state.
         # It can be used to reset the Canvas
         self.Canvas.InitAll()
@@ -186,8 +246,8 @@ class GraphDesignPanel(wx.Panel):
                       "ZoomIn" :  GUIMode.GUIZoomIn(),
                       "ZoomOut": GUIMode.GUIZoomOut(),
                       "Pan" :  GUIMode.GUIMove(),
-                      "SelectNodes" : GUISelectNode(self.Canvas, self.graph),
-                      "SelectEdges" : GUISelectEdge(self.Canvas, self.graph)
+                      "Select" : GUISelect(self.Canvas, self.graph),
+                      "Move" : GUIMove(self.Canvas, self.graph)
                      }
 
 
@@ -206,7 +266,9 @@ class GraphDesignPanel(wx.Panel):
         # Top most sizer has to be set
         self.SetSizerAndFit(box_sizer)
 
-        self.Canvas.SetMode(self.Modes["AddNodes"])
+        self.Canvas.SetMode(GUIMode.GUIMouse())
+
+
 
     # REMOVE LATER, MOVE FUNCTIONALITY TO RIBBON TOOLBAR
 
@@ -248,5 +310,5 @@ class GraphDesignPanel(wx.Panel):
         self.Canvas.SetMode(self.Modes[arg_mode])
         self.graph.draw(self.Canvas)
         self.Canvas.Draw()
-        self.Canvas.ClearAll()
+        self.Canvas.ClearAll(ResetBB=False)
         self.graph.draw(self.Canvas)

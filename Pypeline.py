@@ -43,9 +43,9 @@ ID_ZOOM_IN = ID_NODES + 5
 ID_ZOOM_OUT = ID_NODES + 6
 ID_PAN = ID_NODES + 7
 ID_TOGGLE_MAP = ID_NODES + 8
-ID_SELECT_NODES = ID_NODES + 9
-ID_SELECT_PIPES = ID_NODES + 10
-ID_DELETE_NODE = ID_NODES + 11
+ID_SELECT = ID_NODES + 9
+ID_MOVE = ID_NODES + 10
+ID_DELETE = ID_NODES + 11
 ID_UNDO = ID_NODES + 12
 ID_REDO = ID_NODES + 13
 
@@ -481,16 +481,16 @@ class RibbonFrame(wx.Frame):
         viewing_tools.AddSimpleButton(ID_PAN, "Panning", Resources.getHandBitmap(),
                                   "This is a tooltip for panning")
 
-        general_tools.AddSimpleButton(ID_SELECT_NODES, "Node Selection\Move", bmp8,
+        general_tools.AddSimpleButton(ID_SELECT, "Select", bmp8,
                                   "This is a tooltip for selecting")
-        general_tools.AddSimpleButton(ID_SELECT_PIPES, "Pipe selection", bmp9,
+        general_tools.AddSimpleButton(ID_MOVE, "Move", bmp9,
                                   "This is a tooltip for selecting")
-        general_tools.AddSimpleButton(ID_DELETE_NODE, "Delete", bmp10,
+        general_tools.AddSimpleButton(ID_DELETE, "Delete", bmp10,
                                   "This is a tooltip for deleting elements")
         general_tools.AddSimpleButton(ID_UNDO, "Undo", bmp11,
-                                  "This is a tooltip to undo")
+                                  "This is a tooltip to Undo")
         general_tools.AddSimpleButton(ID_REDO, "Redo", bmp12,
-                                  "This is a tooltip to redo")
+                                  "This is a tooltip to Redo")
 
         ################################################################################################################################################
         ################################################################################################################################################
@@ -757,8 +757,12 @@ class RibbonFrame(wx.Frame):
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onZoomInButtonClick, id=ID_ZOOM_IN )
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onZoomOutButtonClick, id=ID_ZOOM_OUT )
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onPanButtonClick, id=ID_PAN )
-        general_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onSelectNodesButtonClick, id=ID_SELECT_NODES)
-        general_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onSelectPipesButtonClick, id=ID_SELECT_PIPES)
+        general_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onSelectButtonClick, id=ID_SELECT)
+        general_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onMoveButtonClick, id=ID_MOVE)
+        general_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onDeleteButtonClick, id=ID_DELETE)
+        general_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onUndoButtonClick, id=ID_UNDO)
+        general_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onRedoButtonClick, id=ID_REDO)
+        self.Bind(wx.EVT_KEY_DOWN, self.onKeyDown)
 
 
     def OnQuit(self, event):
@@ -769,6 +773,13 @@ class RibbonFrame(wx.Frame):
     ##################################################################################################
 
     '''DESIGN PAGE BUTTON BINDING FUNCTIONS'''
+
+    def onKeyDown(self, event):
+        print "FUCK"
+        keycode = event.GetKeyCode()
+        if keyCode == wx.WXK_ESCAPE:
+            self.SetMode("Select")
+
 
     def onAddNodesButtonClick(self, event):
         self.drawing_canvas.SetMode("AddNodes")
@@ -786,8 +797,8 @@ class RibbonFrame(wx.Frame):
         self.drawing_canvas.SetMode("Pan")
         return
 
-    def onSelectNodesButtonClick(self, event):
-        self.drawing_canvas.SetMode("SelectNodes")
+    def onSelectButtonClick(self, event):
+        self.drawing_canvas.SetMode("Select")
         return
     def onSelectPipesButtonClick(self, event):
         self.drawing_canvas.SetMode("SelectEdges")
@@ -795,6 +806,30 @@ class RibbonFrame(wx.Frame):
 
     def OnDrawingPanelClick(self, event):
         pass
+
+    def onMoveButtonClick(self, event):
+        self.drawing_canvas.SetMode("Move")
+        return
+
+    def onDeleteButtonClick(self, event):
+        if self.graph.focus_node:
+            self.graph.deleteNode(self.graph.focus_node.label)
+        self.graph.draw(self.drawing_canvas.Canvas)
+        self.drawing_canvas.Canvas.Draw()
+        self.drawing_canvas.Canvas.ClearAll(ResetBB=False)
+
+
+    def onUndoButtonClick(self, event):
+        self.graph.undo()
+        self.graph.draw(self.drawing_canvas.Canvas)
+        self.drawing_canvas.Canvas.Draw()
+        self.drawing_canvas.Canvas.ClearAll(ResetBB=False)
+
+    def onRedoButtonClick(self, event):
+        self.graph.redo()
+        self.graph.draw(self.drawing_canvas.Canvas)
+        self.drawing_canvas.Canvas.Draw()
+        self.drawing_canvas.Canvas.ClearAll(ResetBB=False)
 
     def SetBarStyle(self, agwStyle):
 

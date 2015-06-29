@@ -31,7 +31,11 @@ def CreateBitmap(xpm):
 
     return bmp
 
-
+def ScaleBitmap(bitmap, width, height):
+    image = wx.ImageFromBitmap(bitmap)
+    image = image.Scale(width, height, wx.IMAGE_QUALITY_HIGH)
+    result = wx.BitmapFromImage(image)
+    return result
 ##SOME ID CONSTANTS FOR DESIGN BUTTONS
 
 ID_NODES = wx.ID_HIGHEST + 1
@@ -341,10 +345,10 @@ class RibbonFrame(wx.Frame):
 
         # BUTTON ICONS
         # CHANGE CHANGE CHANGE
-        options_bmp1 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp2 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp3 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp4 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp1 = wx.Image("../icons/GeneralSettings.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp2 = wx.Image("../icons/DisplaySettings.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp3 = wx.Image("../icons/UnitSettings.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        options_bmp4 = wx.Image("../icons/ShortcutSettings.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         options_bmp5 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         options_bmp6 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         options_bmp7 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
@@ -402,23 +406,23 @@ class RibbonFrame(wx.Frame):
 
         # BUTTON ICONS
         # CHANGE CHANGE CHANGE
-        options_bmp1 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp2 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp3 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        options_bmp4 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        img_bmp_general_settings = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        img_bmp_display_settings = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        img_bmp_unit_settings = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        img_bmp_short_cut_settings = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
 
         # BUTTONS
         # Testen Sie the toggle :)
         # AddToggleButton(self, button_id, label, bitmap, help_string="")
 
-        Images_Group.AddSimpleButton(wx.ID_ANY, "General Settings", options_bmp1,
+        Images_Group.AddSimpleButton(wx.ID_ANY, "General Settings", img_bmp_general_settings,
                                   "This is a tooltip for adding Nodes")
-        Images_Group.AddSimpleButton(wx.ID_ANY, "Display / Labeling Settings", options_bmp2,
+        Images_Group.AddSimpleButton(wx.ID_ANY, "Display / Labeling Settings", img_bmp_display_settings,
                                   "This is a tooltip for adding Valves")
-        Images_Group.AddSimpleButton(wx.ID_ANY, "Unit Settings", options_bmp3,
+        Images_Group.AddSimpleButton(wx.ID_ANY, "Unit Settings", img_bmp_unit_settings,
                                   "This is a tooltip for adding Compressors")
-        Images_Group.AddSimpleButton(wx.ID_ANY, "Short-Cut Settings", options_bmp4,
+        Images_Group.AddSimpleButton(wx.ID_ANY, "Short-Cut Settings", img_bmp_short_cut_settings,
                                   "This is a tooltip for adding Regulators")
 
         ################################################################################################################################################
@@ -435,10 +439,10 @@ class RibbonFrame(wx.Frame):
         # PLEASE CHANGE ALL BMP ICON NAMES TO REFLECT RELATIVE PANEL
         bmp_nodes= wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         bmp_pipes = wx.Image("../icons/design.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp_valves= wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp_compressors= wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp_regulators= wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        bmp_loss_ele= wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_valves= wx.Image("../icons/Valve.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_compressors= wx.Image("../icons/Compressor.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_regulators= wx.Image("../icons/Regulator.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp_loss_ele= wx.Image("../icons/LossElement.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
         # ICONS for viewing_tools
         bmp6= wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
@@ -759,6 +763,10 @@ class RibbonFrame(wx.Frame):
 
         drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddNodesButtonClick, id=ID_NODES)
         drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddPipesButtonClick, id=ID_PIPES)
+        drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddValvesButtonClick, id=ID_VALVES)
+        drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddRegulatorsButtonClick, id=ID_REGULATORS)
+        drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddCompressorsButtonClick, id=ID_COMPRESSORS)
+        drawing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onAddLossElementsButtonClick, id=ID_LOSS_ELEMENTS)
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onZoomInButtonClick, id=ID_ZOOM_IN )
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onZoomOutButtonClick, id=ID_ZOOM_OUT )
         viewing_tools.Bind(RB.EVT_RIBBONBUTTONBAR_CLICKED, self.onPanButtonClick, id=ID_PAN )
@@ -792,6 +800,22 @@ class RibbonFrame(wx.Frame):
 
     def onAddPipesButtonClick(self, event):
         self.drawing_canvas.SetMode("AddPipes")
+        return
+
+    def onAddValvesButtonClick(self, event):
+        self.drawing_canvas.SetMode("AddValves")
+        return
+
+    def onAddRegulatorsButtonClick(self, event):
+        self.drawing_canvas.SetMode("AddRegulators")
+        return
+
+    def onAddCompressorsButtonClick(self, event):
+        self.drawing_canvas.SetMode("AddCompressors")
+        return
+
+    def onAddLossElementsButtonClick(self, event):
+        self.drawing_canvas.SetMode("AddLossElements")
         return
 
     def onZoomInButtonClick(self, event):

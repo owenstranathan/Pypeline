@@ -72,6 +72,9 @@ class GUIAddNodes(GUIMode.GUIBase):
         self.Canvas.Draw()
         self.Canvas.ClearAll(ResetBB=False)
 
+    def UpdateScreen(self):
+        self.graph.draw(self.Canvas)
+
 
 """
 ADD PIPES
@@ -121,6 +124,7 @@ class GUIAddPipes(GUIMode.GUIBase):
         self.Canvas.ClearAll(ResetBB=False)
 
 
+
     def OnMove(self, event):
         if self.firstNode:
             newPos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
@@ -131,16 +135,52 @@ class GUIAddPipes(GUIMode.GUIBase):
             self.Canvas.Draw()
             self.Canvas.ClearAll(ResetBB=False)
 
+    def UpdateScreen(self):
+        self.graph.draw(self.Canvas)
+
+
+
 """
 ADD NON-PIPE ELEMENTS
     THIS GUI MODE WILL ADD NON-PIPE ELEMENTS TO THE PIPES
 """
+
+
 class GUIAddNonPipeElement(GUIMode.GUIBase):
-    def __init__(self, canvas=None, graph=None):
+    def __init__(self, canvas=None, graph=None, element_type=None):
         GUIMode.GUIBase.__init__(self, canvas)
         self.graph = graph
+        self.element_type = element_type
+
+    def OnLeftDown(self, event):
+        pos = self.Canvas.PixelToWorld(event.GetPosition())
+
+        ## we need to se if the click was on an edge
+        edge = self.graph.getEdgeFromPoint(pos)
+
+        if edge:
+            pos = Geom.snapPointToLine(edge.line, pos)
+
+            if self.element_type == "valve":
+                edge.addElement(PG.Valve(pos))
+            elif self.element_type == "compressor":
+                edge.addElement(PG.Compressor(pos))
+            elif self.element_type == "regulator":
+                edge.addElement(PG.Regulator(pos))
+            elif self.element_type == "lossElement":
+                edge.addElement(PG.LossElement(pos))
+            else:
+                print "Undefined behavior in GUIAddNonPipeElement.OnLeftDown"
 
 
+        self.graph.draw(self.Canvas)
+        self.Canvas.Draw()
+        self.Canvas.ClearAll(ResetBB=False)
+
+
+    def UpdateScreen(self):
+        pass
+        #self.graph.draw(self.Canvas)
 
 """
 SELECTION
@@ -176,26 +216,9 @@ class GUISelect(GUIMode.GUIBase):
         self.Canvas.Draw()
         self.Canvas.ClearAll(ResetBB=False)
 
-    # def OnMove(self, event):
-    #     if self.graph.focus_node and event.Dragging():
-    #         pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
-    #         ##look for a node at the new position in the graph
-    #         ##if you get something back then you know
-    #         ##that you can't put the node there
-    #         other_node = self.graph.findNodeByPos(pos)
-    #         if not other_node:
-    #             self.graph.focus_node.pos = pos
-    #
-    #         self.graph.draw(self.Canvas)
-    #         self.Canvas.Draw()
-    #         self.Canvas.ClearAll(ResetBB=False)
 
-    def OnLeftUp(self, event):
-        #stop selection
-        #self.selected_node = None
+    def UpdateScreen(self):
         self.graph.draw(self.Canvas)
-        self.Canvas.Draw()
-        self.Canvas.ClearAll(ResetBB=False)
 
 
 class GUIMove(GUIMode.GUIMouse):
@@ -265,6 +288,39 @@ class GUIMove(GUIMode.GUIMouse):
         self.Canvas.Draw()
         self.Canvas.ClearAll(ResetBB=False)
 
+    def UpdateScreen(self):
+        self.graph.draw(self.Canvas)
+
+
+class GUIZoomIn(GUIMode.GUIZoomIn):
+    def __init__(self, canvas, graph):
+        GUIMode.GUIZoomIn.__init__(self, canvas)
+        self.graph = graph
+
+    def UpdateScreen(self):
+        #if False:
+        if self.PrevRBBox is not None:
+            dc = wx.ClientDC(self.Canvas)
+            dc.SetPen(wx.Pen('WHITE', 2, wx.SHORT_DASH))
+            dc.SetBrush(wx.TRANSPARENT_BRUSH)
+            dc.SetLogicalFunction(wx.XOR)
+            dc.DrawRectanglePointSize(*self.PrevRBBox)
+        self.Canvas.ClearAll(ResetBB=False)
+        self.graph.draw(self.Canvas)
+
+
+
+
+class GUIZoomOut(GUIMode.GUIZoomOut):
+    def __init__(self, canvas, graph):
+        GUIMode.GUIZoomOut.__init__(self, canvas)
+        self.graph = graph
+
+    def UpdateScreen(self):
+        self.Canvas.ClearAll(ResetBB=False)
+        self.graph.draw(self.Canvas)
+
+
 
 ###############################################################################
 ##UI GRAPH#####################################################################
@@ -287,15 +343,19 @@ class GraphDesignPanel(wx.Panel):
         # InitAll() sets everything in the Canvas to default state.
         # It can be used to reset the Canvas
         self.Canvas.InitAll()
-        self.Canvas.GridUnder = FloatCanvas.DotGrid((grid_cell_size, grid_cell_size), Size=3, Color="BLACK")
+        self.Canvas.GridUnder = FloatCanvas.DotGrid((grid_cell_size, grid_cell_size), Size=4, Color="GREY")
 
         # This is all from Navcanvas, to keep funtionality, I'll take these calls to FloatCanvas.GUIMode and bind them
         # to the actual GUI Toolbar, later...
         self.Modes = {
                       "AddNodes": GUIAddNodes(self.Canvas, self.graph),
                       "AddPipes": GUIAddPipes(self.Canvas, self.graph),
-                      "ZoomIn" :  GUIMode.GUIZoomIn(),
-                      "ZoomOut": GUIMode.GUIZoomOut(),
+                      "AddValves" : GUIAddNonPipeElement(self.Canvas, self.graph, element_type="valve"),
+                      "AddRegulators" : GUIAddNonPipeElement(self.Canvas, self.graph, element_type="regulator"),
+                      "AddCompressors" : GUIAddNonPipeElement(self.Canvas, self.graph, element_type="compressor"),
+                      "AddLossElements" : GUIAddNonPipeElement(self.Canvas, self.graph, element_type="lossElement"),
+                      "ZoomIn" :  GUIZoomIn(self.Canvas, self.graph),
+                      "ZoomOut": GUIZoomOut(self.Canvas, self.graph),
                       "Pan" :  GUIMode.GUIMove(),
                       "Select" : GUISelect(self.Canvas, self.graph),
                       "Move" : GUIMove(self.Canvas, self.graph)

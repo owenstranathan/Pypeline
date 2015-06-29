@@ -65,14 +65,207 @@ class Edge():
         self.line = new_line
 
 
+    def addElement(self, arg_element):
+        for element in self.elements:
+            if element.pos == arg_element.pos:
+                print "Cannot add element at this position"
+                return False
 
+        self.elements.append(arg_element)
+        return True
 
 ###############################################################################
 ##EDGE ELEMENT#################################################################
 ###############################################################################
+## the Edge element is a parent class for
+## Valve, Compressors, Regulators and Loss Elements
+## it's Comstrutor takes a position tuple( x, y) coordinate
+## and a flow switch (a positive or negative number (+1/-1) to signify
+## the direction of flow on the Edge(pipe) )
 class EdgeElement():
     def __init__(self, pos):
         self.pos = pos
+
+
+
+class Valve(EdgeElement):
+    def __init__(self, pos):
+        EdgeElement.__init__(self, pos)
+
+    def draw(self, Canvas, line):
+        t_size =  8 / Canvas.Scale
+        point = self.pos
+        ## Make the T shape with lines
+        downPoint = (point[0] , point[1]-t_size/2)
+        upPoint = (point[0], point[1]+t_size)
+        rightPoint = (point[0]+t_size, point[1]+t_size)
+        leftPoint = (point[0]-t_size, point[1]+t_size)
+
+        ## rotate the T shape to always be normal to the edge
+        theta = Geom.angleFromXaxis(line)
+        lines = [leftPoint, rightPoint , upPoint, downPoint]
+        lines = Geom.rotatePointList(lines, theta, point)
+
+
+        Canvas.AddLine(
+            [lines[0], lines[1]],
+            LineWidth=4,
+            LineColor="BLUE"
+        )
+        Canvas.AddLine(
+            [lines[2], lines[3]],
+            LineWidth=4,
+            LineColor="BLUE"
+        )
+
+
+class Compressor(EdgeElement):
+    def __init__(self, pos):
+        EdgeElement.__init__(self, pos)
+
+    def draw(self, Canvas, line):
+        c_w = 10 / Canvas.Scale
+        c_h_long = 10 /Canvas.Scale
+        c_h_short = 3 / Canvas.Scale
+        point = self.pos
+        leftPoint = (point[0]-c_w, point[1])
+        rightPoint = (point[0]+c_w, point[1])
+
+
+
+        def rightCompressor(l_point, r_point):
+            upLeftPoint = (l_point[0], l_point[1]+c_h_long)
+            downLeftPoint = (l_point[0], l_point[1]-c_h_long)
+            upRightPoint = (r_point[0], r_point[1]+c_h_short)
+            downRightPoint = (r_point[0], r_point[1]-c_h_short)
+            return [upLeftPoint, downLeftPoint, downRightPoint, upRightPoint]
+
+        def leftCompressor(l_point, r_point):
+            upLeftPoint = (l_point[0], l_point[1]+c_h_short)
+            downLeftPoint = (l_point[0], l_point[1]-c_h_short)
+            upRightPoint = (r_point[0], r_point[1]+c_h_long)
+            downRightPoint = (r_point[0], r_point[1]- c_h_long)
+            return [upLeftPoint, downLeftPoint, downRightPoint, upRightPoint]
+
+
+        ## find the change in x on the line to determine the
+        ## direction of the edge
+        delta_x = Geom.delta_x(*line)
+
+        ## get the angle that the line makes with the x-axis
+        theta = Geom.angleFromXaxis(line)
+
+        ## if it's negative the direction in the x is right justified
+        if delta_x < 0:
+            ## so we construct a right justified shape
+            compressor = rightCompressor(leftPoint, rightPoint)
+
+        ## if it's positive the direction in the x is left justified
+        elif delta_x > 0:
+            ## so we construct a left justified shape
+            compressor = leftCompressor(leftPoint, rightPoint)
+
+        ## Uh Oh Vertical lines, now we have to think about the change in y
+        elif delta_x == 0:
+            ## the change in y
+            delta_y = Geom.delta_y(*line)
+
+            ## if it's positive then the direction in the y is up
+            if delta_y < 0:
+                ## since we will ultimately be rotating 90 degrees
+                ## for a vertical line pointing up
+                ## we want the shape to be right justified
+                ## (think about it)
+                compressor = rightCompressor(leftPoint, rightPoint)
+
+            ##if it's negative then the direction in the y is down
+            elif delta_y > 0:
+                ## and we construct a left justified shape
+                compressor = leftCompressor(leftPoint, rightPoint)
+
+        ## if the delta y is also zero then our line is two of
+        ## the same point and we have some bad input
+        ## since this code is just for prototyping and fast development
+        ## we will make due with a descriptive warning message printed
+        ## to the console, and we'll make compressor right justified
+        ## don't worry if this happens it will be obvious
+        else:
+            compressor = rightCompressor(leftPoint, rightPoint)
+
+
+        ## and then we rotate it acordingly
+        compressor = Geom.rotatePointList(compressor, theta, point)
+
+        ## finally we draw this darned thing to the Canvas
+        Canvas.AddPolygon(
+            compressor,
+            LineWidth=1,
+            LineColor="BLUE",
+            FillColor="BLUE",
+        )
+
+class Regulator(EdgeElement):
+    def __init__(self, pos):
+        EdgeElement.__init__(self, pos)
+
+    def draw(self, Canvas, line):
+        r_size = 10 / Canvas.Scale
+        point = self.pos
+        rightPoint = (point[0] - r_size, point[1])
+        leftPoint = (point[0] + r_size, point[1])
+        upRightPoint = (rightPoint[0], rightPoint[1]+ r_size)
+        downRightPoint = (rightPoint[0], rightPoint[1]-r_size)
+        upLeftPoint = (leftPoint[0], leftPoint[1]+r_size)
+        downLeftPoint = (leftPoint[0], leftPoint[1]-r_size)
+
+        theta = Geom.angleFromXaxis(line)
+
+        firstTriangle = [point, upRightPoint, downRightPoint]
+        secondTriangle = [point, upLeftPoint, downLeftPoint]
+
+        firstTriangle = Geom.rotatePointList(firstTriangle, theta, point)
+        secondTriangle = Geom.rotatePointList(secondTriangle, theta, point)
+
+        print firstTriangle
+        print secondTriangle
+
+        Canvas.AddPolygon(
+            firstTriangle,
+            LineWidth=1,
+            LineColor="BLUE",
+            FillColor="BLUE",
+        )
+        Canvas.AddPolygon(
+            secondTriangle,
+            LineWidth=1,
+            LineColor="BLUE",
+            FillColor="BLUE",
+        )
+
+class LossElement(EdgeElement):
+    def __init__(self, pos):
+        EdgeElement.__init__(self, pos)
+
+
+    def draw(self, Canvas, line):
+        l_size = 8 / Canvas.Scale
+        point = self.pos
+        upPoint = (point[0], point[1]+ l_size)
+        downPoint = (point[0], point[1] - l_size)
+        rightPoint = (point[0] + l_size, point[1] - l_size)
+        lines = [upPoint, downPoint, rightPoint]
+        theta = Geom.angleFromXaxis(line)
+        lines = Geom.rotatePointList(lines, theta, point)
+        Canvas.AddLine(
+            [lines[0], lines[1]],
+            LineWidth=4,
+            LineColor="BLUE"
+        )
+        Canvas.AddLine(
+            [lines[1], lines[2]],
+            LineWidth=4,
+            LineColor="BLUE"
+        )
 
 ###############################################################################
 ##GRAPH########################################################################
@@ -91,8 +284,7 @@ class EdgeElement():
         if the focus node is deleted the focus node becomes
         the last node in the list
 '''
-NODE_SIZE = 10  ##the physical size of the node as drawn on the canvas
-LINE_SIZE = 5
+
 class Graph():
     def __init__(self):
         ##an empty list of nodes ( the adjacency list )
@@ -259,9 +451,13 @@ class Graph():
         return None
 
 
+
     ##this uses BFT(breadth first traversal) to draw every node and
     ##edge in the graph
     def draw(self, Canvas):
+        NODE_SIZE = 10 /Canvas.Scale ##the physical size of the node as drawn on the canvas
+        LINE_SIZE = 5 #* Canvas.Scale
+
         #this adds lines and circles to the graph
         for node in self.nodes:
             for edge in node._neighbors:
@@ -280,14 +476,15 @@ class Graph():
                         ArrowHeadSize=16
                     )
                 for element in edge.elements:
-                    Canvas.AddRectangle(
-                        element.pos,
-                        (5,5),
-                        LineStyle="Solid",
-                        LineWidth=2,
-                        LineColor="Blue",
-                        FillColor="Blue"
-                        )
+                    element.draw(Canvas, edge.line)
+                    # Canvas.AddRectangle(
+                    #     element.pos,
+                    #     (5,5),
+                    #     LineStyle="Solid",
+                    #     LineWidth=2,
+                    #     LineColor="Blue",
+                    #     FillColor="Blue"
+                    #     )
         for node in self.nodes:
             if node is self.focus_node:
                 Canvas.AddCircle(

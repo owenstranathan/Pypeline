@@ -1,7 +1,53 @@
-
+import math
 ###############################################################################
 ##GEOMETRY#####################################################################
 ###############################################################################
+
+def delta_x(p1, p2):
+    return p1[0] - p2[0]
+
+
+def delta_y(p1,p2):
+    return p1[1]-p2[1]
+
+
+def slope(line):
+    dx = delta_x(line[0], line[1])
+    dy = delta_y(line[0], line[1])
+    if dx == 0:
+        return float("NaN")
+    elif dy == 0:
+        return float(0)
+    else:
+        return float(dy/dx)
+
+def angleFromXaxis(line):
+    m = slope(line)
+    if math.isnan(m):
+        ## we have a vertical line
+        return math.radians(90)
+    elif m == 0:
+        return math.radians(0)
+    else:
+        return math.atan(m)
+
+
+def rotatePoint(centerPoint,point,angle):
+    """Rotates a point around another centerPoint. Angle is in degrees.
+    Rotation is counter-clockwise"""
+    temp_point = point[0]-centerPoint[0] , point[1]-centerPoint[1]
+    temp_point = ( temp_point[0]*math.cos(angle)-temp_point[1]*math.sin(angle) , temp_point[0]*math.sin(angle)+temp_point[1]*math.cos(angle))
+    temp_point = temp_point[0]+centerPoint[0] , temp_point[1]+centerPoint[1]
+    return temp_point
+
+
+def rotatePointList(points, theta=math.pi, pointOfRotation=(0,0)):
+    """Rotates the given polygon which consists of corners represented as (x,y),
+    around a given point, counter-clockwise, theta degrees"""
+    rotatedPoints = []
+    for corner in points :
+        rotatedPoints.append(rotatePoint(pointOfRotation, corner, theta))
+    return rotatedPoints
 
 ## this function just returns the distance between two lines
 def dist(point1, point2):
@@ -132,6 +178,8 @@ def distFromLineSeg( line, point):
                 ##Now all we do is find and return the distance(the shortest distance)
                 distance = dist((Dx,Dy),(Cx,Cy))
     return distance
+
+
 
 def snapPointToLine(line, point):
     Ax = line[0][0]

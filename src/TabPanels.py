@@ -294,7 +294,7 @@ class NodePhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -576,7 +576,7 @@ class PipeInfoPanel(wx.Panel):
         tctrl2 = wx.TextCtrl(panel, -1, "N34567",size=(55,-1))
         tctrl3 = wx.TextCtrl(panel, -1, style=wx.TE_MULTILINE)
 
-        bmp1= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp1= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp1, wx.BLUE)
         bmp1.SetMask(mask)
 
@@ -584,7 +584,7 @@ class PipeInfoPanel(wx.Panel):
                        (bmp1.GetWidth(), bmp1.GetHeight()))
         button1.SetToolTipString("election From Map")
 
-        bmp2= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp2= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp2, wx.BLUE)
         bmp2.SetMask(mask)
 
@@ -644,7 +644,7 @@ class PipePhysicalPanel(wx.Panel):
         statictext2 = wx.StaticText(panel, -1, "Th.")
 
 
-        bmp1 = wx.Image("../icons/aquaButton.jpg", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp1 = wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp1, wx.BLUE)
         bmp1.SetMask(mask)
         bmpButton1 = wx.BitmapButton(self, -1, bmp1, (20, 20),
@@ -920,7 +920,7 @@ class ValveInfoPanel(wx.Panel):
         choices1 = wx.Choice(panel, wx.ID_ANY, choices=node_choices)
         choices1.SetSelection(0)
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -970,7 +970,7 @@ class ValvePhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -1153,7 +1153,7 @@ class CompressorInfoPanel(wx.Panel):
         choices1 = wx.Choice(panel, wx.ID_ANY, choices=node_choices)
         choices1.SetSelection(0)
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -1203,7 +1203,7 @@ class CompressorPhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -1454,7 +1454,7 @@ class RegulatorInfoPanel(wx.Panel):
         choices1 = wx.Choice(panel, wx.ID_ANY, choices=node_choices)
         choices1.SetSelection(0)
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -1504,7 +1504,7 @@ class RegulatorPhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -1752,7 +1752,7 @@ class LossElementInfoPanel(wx.Panel):
         choices1 = wx.Choice(panel, wx.ID_ANY, choices=node_choices)
         choices1.SetSelection(0)
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -1802,7 +1802,7 @@ class LossElementPhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("../icons/aquaButton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("../icons/0000_Element_Screen_Coordinate_Selection.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 

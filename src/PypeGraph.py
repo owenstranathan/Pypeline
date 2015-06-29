@@ -226,8 +226,6 @@ class Regulator(EdgeElement):
         firstTriangle = Geom.rotatePointList(firstTriangle, theta, point)
         secondTriangle = Geom.rotatePointList(secondTriangle, theta, point)
 
-        print firstTriangle
-        print secondTriangle
 
         Canvas.AddPolygon(
             firstTriangle,

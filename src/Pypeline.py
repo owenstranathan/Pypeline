@@ -797,11 +797,11 @@ class RibbonFrame(wx.Frame):
 
         Results_Bar = RB.RibbonButtonBar(Results_Panel2)
 
-        results_bmp1 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        results_bmp2 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        results_bmp3 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        results_bmp4 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        results_bmp5 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        results_bmp1 = wx.Image("../icons/Results/Results_01_Result_Tables.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        results_bmp2 = wx.Image("../icons/Results/Results_02_Optimization.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        results_bmp3 = wx.Image("../icons/Results/Results_03_Calculations.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        results_bmp4 = wx.Image("../icons/Results/Results_04_Result_Graphs.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        results_bmp5 = wx.Image("../icons/Results/Results_05_Generate_Report.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
         Results_Bar.AddSimpleButton(wx.ID_ANY, "Generate Result Tables", results_bmp1,
                                   "This is a tooltip for adding Nodes")

@@ -92,6 +92,7 @@ class GUIAddNodes(GUIMode.GUIBase):
         if self.firstClick:
             newPos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
             coords = (self.graph.focus_node.pos , newPos)
+            # self.Canvas.AddSmoothArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
             self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
             #we draw the graoh here because the state has most probably changed
             self.graph.draw(self.Canvas)
@@ -174,78 +175,29 @@ class GraphDesignPanel(wx.Panel):
 
         self.Canvas = FloatCanvas.FloatCanvas(self)
 
-
         # InitAll() sets everything in the Canvas to default state.
         # It can be used to reset the Canvas
         self.Canvas.InitAll()
         self.Canvas.GridUnder = FloatCanvas.DotGrid((grid_cell_size, grid_cell_size), Size=3, Color="BLACK")
 
-        # This is all from Navcanvas, to keep funtionality, I'll take these calls to FloatCanvas.GUIMode and bind them
-        # to the actual GUI Toolbar, later...
-        self.Modes = [
-                      ("Add Nodes", GUIAddNodes(self.Canvas, self.graph), Resources.getPointerBitmap()),
-                      ("Zoom In",  GUIMode.GUIZoomIn(),  Resources.getMagPlusBitmap()),
-                      ("Zoom Out", GUIMode.GUIZoomOut(), Resources.getMagMinusBitmap()),
-                      ("Pan",      GUIMode.GUIMove(),    Resources.getHandBitmap()),
-                      ("Select Nodes", GUISelectNode(self.Canvas, self.graph), Resources.getHandBitmap()),
-                      ("Select Edges", GUISelectEdge(self.Canvas, self.graph), Resources.getHandBitmap()),
-                     ]
+        self.Modes = {
+                      "AddNodes": GUIAddNodes(self.Canvas, self.graph),
+                      "ZoomIn" :  GUIMode.GUIZoomIn(),
+                      "ZoomOut": GUIMode.GUIZoomOut(),
+                      "Pan" :  GUIMode.GUIMove(),
+                      "SelectNodes" : GUISelectNode(self.Canvas, self.graph),
+                      "SelectEdges" : GUISelectEdge(self.Canvas, self.graph)
+                     }
 
-
-        self.BuildToolbar()
-
-        ## Create the vertical sizer for the toolbar and Panel
-        # Remember that verticial means the widgets will stack vertically
-        # You need to have a sizer for all widgets in the GUI
-        # In general the hierarchy needs to be followed container --> widget
         box_sizer = wx.BoxSizer(wx.VERTICAL)
-        box_sizer.Add(self.ToolBar, 0, wx.ALL | wx.ALIGN_LEFT | wx.GROW, 4)
-
-        # second parameter refers to "proportionality" so the toolbar to drawing area will be 1:6
         box_sizer.Add(self.Canvas, 1, wx.GROW)
 
-        # Top most sizer has to be set
         self.SetSizerAndFit(box_sizer)
 
-        self.Canvas.SetMode(self.Modes[0][1])
+        self.Canvas.SetMode(self.Modes["AddNodes"])
 
-    # REMOVE LATER, MOVE FUNCTIONALITY TO RIBBON TOOLBAR
-
-    def BuildToolbar(self):
-        """
-        This is here so it can be over-ridden in a ssubclass, to add extra tools, etc
-        """
-        tb = wx.ToolBar(self)
-        self.ToolBar = tb
-
-        tb.SetToolBitmapSize((24, 24))
-        self.AddToolbarModeButtons(tb, self.Modes)
-
-        tb.Realize()
-
-    def AddToolbarModeButtons(self, tb, Modes):
-        self.ModesDict = {}
-        for Mode in Modes:
-            tool = tb.AddRadioTool(wx.ID_ANY, shortHelp=Mode[0], bitmap=Mode[2])
-            self.Bind(wx.EVT_TOOL, self.SetMode, tool)
-            self.ModesDict[tool.GetId()]=Mode[1]
-        #self.ZoomOutTool = tb.AddRadioTool(wx.ID_ANY, bitmap=Resources.getMagMinusBitmap(), shortHelp = "Zoom Out")
-        #self.Bind(wx.EVT_TOOL, lambda evt : self.SetMode(Mode=self.GUIZoomOut), self.ZoomOutTool)
-
-
-
-    def HideShowHack(self):
-        ##fixme: remove this when the bug is fixed!
-        """
-        Hack to hide and show button on toolbar to get around OS-X bug on
-        wxPython2.8 on OS-X
-        """
-        self.ZoomButton.Hide()
-        self.ZoomButton.Show()
-
-    def SetMode(self, event):
-        Mode = self.ModesDict[event.GetId()]
-        self.Canvas.SetMode(Mode)
+    def SetMode(self, arg_mode):
+        self.Canvas.SetMode(self.Modes[arg_mode])
         self.graph.draw(self.Canvas)
         self.Canvas.Draw()
         self.Canvas.ClearAll()

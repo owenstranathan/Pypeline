@@ -48,6 +48,17 @@ class Node():
         self._neighbors.append(Edge(node, weight))
         return True
 
+    def removeEdge(self, arg_edge):
+        ## look for the edge
+        for edge in self._neighbors:
+            ## if you find it then remove it
+            if edge is arg_edge:
+                self._neighbors.remove(arg_edge)
+                return True
+
+        ## if you don't find it then return false
+        return False
+
 ###############################################################################
 ##EDGE#########################################################################
 ###############################################################################
@@ -287,13 +298,14 @@ class Graph():
     def __init__(self):
         ##an empty list of nodes ( the adjacency list )
         self.nodes = []
-        ## An empty list of edges ( Node tuples )
+
         ##a node variable for node focus (the node being looked at)
         self.focus_node = None
         ##an Edge variable to hold the focus edge
         self.focus_edge = None
         ##a private integer for automatic id assignment
         self._node_id = 0
+
         ##undo history so that you can redo
         self.undone_nodes = []
 
@@ -319,29 +331,53 @@ class Graph():
         return True
 
 
+
     ##deleting a node is alittle more complicated
     ##useing something similar to BFT
     ##python is weird and my c++ brain doesn't understand
-    def deleteNode(self, label):
-        ##examine every node in the list
-        for node in self.nodes:
-            ##if the node is found then remove it from the graph
-            if node.label == label:
-                self.nodes.remove(node)
-            else:
-                ##also look for the node in the edges of other nodes
-                for edge in node._neighbors:
-                    ##and remove that edge if it exists
-                    if edge.node.label == label:
-                        node._neighbors.remove(edge)
+    def deleteNode(self, arg_node):
+        ##delete the node from the nodes list
+        self.nodes.remove(arg_node)
 
-        ##reset the focus node if necessary
-        if self.focus_node.label == label:
-            if not self.nodes:
-                print "graph empty"
-                self.focus_node = None
-            else:
-                self.focus_node = self.nodes[-1]
+        for node in self.nodes:
+            ##also look for the node in the edges of other nodes
+            for edge in node._neighbors:
+                ##and remove that edge if it exists
+                if edge.node is arg_node:
+                    node._neighbors.remove(edge)
+
+        ##reset the focus node
+        if not self.nodes:
+            print "graph empty"
+            self.focus_node = None
+        else:
+            self.focus_node = self.nodes[-1]
+
+    def deleteEdge(self, arg_edge):
+        for node in self.nodes:
+            ## try and remove an edge from all nodes
+            if node.removeEdge(arg_edge):
+                ##if you did it then good job; return True
+                self.printGraph()
+                return True
+        ## if you don't find it then return False
+        return False
+
+
+    def hasEdge(self, arg_node):
+        ## if the _neighbors list is not empty
+        if arg_node._neighbors:
+            ## the node definately has edges
+            return True
+        ## look for hte node in everyone else's neighbors
+        else:
+            for node in self.nodes:
+                for edge in node._neighbors:
+                    if edge.node is arg_node:
+                        return True
+
+        ## if you find no edge then return Falsch
+        return False
 
     #########################################
     ##for finding a node by label			#
@@ -453,6 +489,7 @@ class Graph():
     ##this uses BFT(breadth first traversal) to draw every node and
     ##edge in the graph
     def draw(self, Canvas):
+        YELLOW = (179, 179, 70, 255)
         NODE_SIZE = 10 /Canvas.Scale ##the physical size of the node as drawn on the canvas
         LINE_SIZE = 5 #* Canvas.Scale
 
@@ -464,13 +501,13 @@ class Graph():
                 if edge is self.focus_edge:
                     Canvas.AddArrowLine(
                         line, LineWidth=LINE_SIZE,
-                        LineColor = "GREEN",
+                        LineColor = YELLOW,
                         ArrowHeadSize=16
                     )
                 else:
                     Canvas.AddArrowLine(
                         line, LineWidth=LINE_SIZE,
-                        LineColor="RED",
+                        LineColor="BLUE",
                         ArrowHeadSize=16
                     )
                 for element in edge.elements:
@@ -483,22 +520,24 @@ class Graph():
                     #     LineColor="Blue",
                     #     FillColor="Blue"
                     #     )
+
+
         for node in self.nodes:
             if node is self.focus_node:
                 Canvas.AddCircle(
                     node.pos,
                     NODE_SIZE,
                     LineWidth=1,
-                    LineColor='GREEN',
-                    FillColor='GREEN'
+                    LineColor='YELLOW',
+                    FillColor='YELLOW'
                 )
             else:
                 Canvas.AddCircle(
                     node.pos,
                     NODE_SIZE,
                     LineWidth=1,
-                    LineColor='RED',
-                    FillColor='RED'
+                    LineColor='BLUE',
+                    FillColor='BLUE'
                 )
         # ##This just puts a dotted square around the focus node
         # if self.focus_node:

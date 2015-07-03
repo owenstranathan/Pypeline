@@ -40,40 +40,40 @@ def getSnapPos(arg_pos):
     GUI Modes for DesignPanel
 '''
 
+class GUIGraph(GUIMode.GUIBase):
+    def __init__(self, canvas=None, graph=None):
+        GUIMode.GUIBase.__init__(self, canvas)
+        self.graph = graph
+
+    def update(self):
+        self.graph.draw(self.Canvas)
+        self.Canvas.Draw()
+        self.Canvas.ClearAll(ResetBB=False)
 
 """
 DESIGN:
     THIS GUI MODE IS FOR ADDING NODES AND OTHERWIZE EXTENDING THE GRAPH
 """
-class GUIAddNodes(GUIMode.GUIBase):
+class GUIAddNodes(GUIGraph):
     def __init__(self, canvas=None, graph=None):
-        GUIMode.GUIBase.__init__(self, canvas)
-        self.graph = graph
+        GUIGraph.__init__(self, canvas, graph)
         self.firstClick = False
 
     def OnLeftDown(self, event):
-
         ##get the position of the click
         current_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
-
+        ##try and add a node at this position
         if not self.graph.addNode(current_pos):
+            ## if there is already a node there then set it as focus
             self.graph.setFocusByPos(current_pos)
-
-        self.graph.setFocusByPos(current_pos)
-
-
+        else:
+            self.graph.setFocusByPos(current_pos)
         ##if some nodes have recently been undone and you are creating new nodes
         if self.graph.undone_nodes:
             ##officially delete the undone nodes
             del self.graph.undone_nodes[:]
-
         #because state has likely changes we ReDraw
-        self.graph.draw(self.Canvas)
-        self.Canvas.Draw()
-        self.Canvas.ClearAll(ResetBB=False)
-
-    def UpdateScreen(self):
-        self.graph.draw(self.Canvas)
+        self.update()
 
 
 """
@@ -81,10 +81,9 @@ ADD PIPES
     THIS GUI MODE IS FOR ADDING PIPES BETWEEN NODES
 """
 
-class GUIAddPipes(GUIMode.GUIBase):
+class GUIAddPipes(GUIGraph):
     def __init__(self, canvas=None, graph=None):
-        GUIMode.GUIBase.__init__(self, canvas)
-        self.graph = graph
+        GUIGraph.__init__(self, canvas, graph)
         self.firstNode = None
         self.secondNode = None
 
@@ -108,9 +107,7 @@ class GUIAddPipes(GUIMode.GUIBase):
             del self.graph.undone_nodes[:]
 
         #because state has likely changes we ReDraw
-        self.graph.draw(self.Canvas)
-        self.Canvas.Draw()
-        self.Canvas.ClearAll(ResetBB=False)
+        self.update
 
     def OnLeftUp(self, event):
         if self.firstNode and self.secondNode and (self.firstNode is not self.secondNode):
@@ -119,9 +116,7 @@ class GUIAddPipes(GUIMode.GUIBase):
             else:
                 print "cannot add edge"
                 self.secondNode = None
-        self.graph.draw(self.Canvas)
-        self.Canvas.Draw()
-        self.Canvas.ClearAll(ResetBB=False)
+        self.update()
 
 
 
@@ -131,12 +126,8 @@ class GUIAddPipes(GUIMode.GUIBase):
             coords = (self.firstNode.pos , newPos)
             self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
             #we draw the graoh here because the state has most probably changed
-            self.graph.draw(self.Canvas)
-            self.Canvas.Draw()
-            self.Canvas.ClearAll(ResetBB=False)
+            self.update()
 
-    def UpdateScreen(self):
-        self.graph.draw(self.Canvas)
 
 
 
@@ -146,10 +137,9 @@ ADD NON-PIPE ELEMENTS
 """
 
 
-class GUIAddNonPipeElement(GUIMode.GUIBase):
+class GUIAddNonPipeElement(GUIGraph):
     def __init__(self, canvas=None, graph=None, element_type=None):
-        GUIMode.GUIBase.__init__(self, canvas)
-        self.graph = graph
+        GUIGraph.__init__(self, canvas, graph)
         self.element_type = element_type
 
     def OnLeftDown(self, event):
@@ -173,24 +163,17 @@ class GUIAddNonPipeElement(GUIMode.GUIBase):
                 print "Undefined behavior in GUIAddNonPipeElement.OnLeftDown"
 
 
-        self.graph.draw(self.Canvas)
-        self.Canvas.Draw()
-        self.Canvas.ClearAll(ResetBB=False)
+        self.update()
 
-
-    def UpdateScreen(self):
-        pass
-        #self.graph.draw(self.Canvas)
 
 """
 SELECTION
     THIS GUIMODE IS FOR SELECTING NODES ON A GRAPH AND MOVING THEM.
     LATER DELETION AND OTHER FORMS OF EDITING WILL BE SUPPORTED
 """
-class GUISelect(GUIMode.GUIBase):
+class GUISelect(GUIGraph):
     def __init__(self, canvas=None, graph=None):
-        GUIMode.GUIBase.__init__(self, canvas)
-        self.graph = graph
+        GUIGraph.__init__(self, canvas, graph)
         self.selection = None
 
     def OnLeftDown(self, event):
@@ -212,25 +195,18 @@ class GUISelect(GUIMode.GUIBase):
             self.graph.focus_edge = None
 
 
-        self.graph.draw(self.Canvas)
-        self.Canvas.Draw()
-        self.Canvas.ClearAll(ResetBB=False)
+        self.update()
 
 
-    def UpdateScreen(self):
-        self.graph.draw(self.Canvas)
 
-
-class GUIMove(GUIMode.GUIMouse):
+class GUIMove(GUIGraph):
     def __init__(self, canvas = None, graph = None):
-        self.Canvas = canvas
-        self.graph = graph
+        GUIGraph.__init__(self, canvas, graph)
         self.allow_move = False
         self.premove_pos = None
         self.decision = None
 
     def OnLeftDown(self, event):
-
         focus = self.graph.focus_node
         if focus:
             pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
@@ -253,10 +229,7 @@ class GUIMove(GUIMode.GUIMouse):
                 self.graph.focus_node.pos = pos
 
             #we draw the graoh here because the state has most probably changed
-            self.graph.draw(self.Canvas)
-            self.Canvas.Draw()
-            self.Canvas.ClearAll(ResetBB=False)
-
+            self.update()
 
     def OnLeftUp(self, event):
         if self.allow_move:
@@ -266,7 +239,7 @@ class GUIMove(GUIMode.GUIMouse):
             self.message += "connected to it. Are you sure you want to move this node?"
             self.message += " Press 'Ok' to continue moving it"
 
-            if self.graph.focus_node.pos != self.premove_pos:
+            if self.graph.focus_node.pos != self.premove_pos and self.graph.hasEdge(self.graph.focus_node):
                 self.decision = wx.MessageBox(self.message, "Move Warning!", wx.OK | wx.CANCEL )
                 ## if the decision is ok then make the change
                 if self.decision == wx.OK:
@@ -284,12 +257,9 @@ class GUIMove(GUIMode.GUIMouse):
 
 
         self.allow_move = False
-        self.graph.draw(self.Canvas)
-        self.Canvas.Draw()
-        self.Canvas.ClearAll(ResetBB=False)
 
-    def UpdateScreen(self):
-        self.graph.draw(self.Canvas)
+        self.update()
+
 
 
 class GUIZoomIn(GUIMode.GUIZoomIn):
@@ -380,7 +350,10 @@ class GraphDesignPanel(wx.Panel):
         self.Canvas.SetMode(GUIMode.GUIMouse())
 
 
-
+    def update(self):
+        self.graph.draw(self.Canvas)
+        self.Canvas.Draw()
+        self.Canvas.ClearAll(ResetBB=False)
     # REMOVE LATER, MOVE FUNCTIONALITY TO RIBBON TOOLBAR
 
     # def BuildToolbar(self):

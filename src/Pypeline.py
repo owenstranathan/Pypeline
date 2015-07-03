@@ -331,7 +331,7 @@ class RibbonFrame(wx.Frame):
 
 
         '''RIBBON PAGES'''
-        File = RB.RibbonPage(self._ribbon, wx.ID_ANY, "FILE")
+        # File = RB.RibbonPage(self._ribbon, wx.ID_ANY, "FILE")
         Options = RB.RibbonPage(self._ribbon, wx.ID_ANY, "OPTIONS")
         Mapping = RB.RibbonPage(self._ribbon, wx.ID_ANY, "MAPPING")
         Design = RB.RibbonPage(self._ribbon, wx.ID_ANY, "DESIGN")
@@ -340,39 +340,39 @@ class RibbonFrame(wx.Frame):
         Help = RB.RibbonPage(self._ribbon, wx.ID_ANY, "HELP")
 
 
-        ################################################################################################################################################
-        ################################################################################################################################################
-        ################################################################################################################################################
-
-        '''FILE PAGE'''
-
-        # REALLY NEED TO CHANGE THE NAME FROM TOOLBAR TO FILE OR WHATEVER NAME WE'RE USING
-
-
-        toolbar_panel = RB.RibbonPanel(File, wx.ID_ANY, "", wx.NullBitmap, wx.DefaultPosition,
-                                       wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE|RB.RIBBON_PANEL_EXT_BUTTON)
-
-        # THE TOOLBAR WITHIN RIBBON MEANS A GRID LIKE PANEL
-        toolbar = RB.RibbonToolBar(toolbar_panel, wx.ID_ANY)
-
-        toolbar.AddSeparator()
-        toolbar.AddHybridTool(wx.ID_NEW, wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER, wx.Size(24, 24)))
-        toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, wx.Size(24, 23)))
-
-        toolbar.AddSeparator()
-        toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
-        toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_OTHER, wx.Size(24, 23)))
-
-        toolbar.AddSeparator()
-        toolbar.AddHybridTool(wx.ID_PRINT, wx.ArtProvider.GetBitmap(wx.ART_PRINT, wx.ART_OTHER, wx.Size(24, 23)),
-                              "Print button")
-        toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_QUIT, wx.ART_OTHER, wx.Size(24, 23)))
-
-        toolbar.AddSeparator()
-        toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_ADD_BOOKMARK, wx.ART_OTHER, wx.Size(24, 23)))
-        toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_DEL_BOOKMARK, wx.ART_OTHER, wx.Size(24, 23)))
-
-        toolbar.SetRows(2, 3)
+        # ################################################################################################################################################
+        # ################################################################################################################################################
+        # ################################################################################################################################################
+        #
+        # '''FILE PAGE'''
+        #
+        # # REALLY NEED TO CHANGE THE NAME FROM TOOLBAR TO FILE OR WHATEVER NAME WE'RE USING
+        #
+        #
+        # toolbar_panel = RB.RibbonPanel(File, wx.ID_ANY, "", wx.NullBitmap, wx.DefaultPosition,
+        #                                wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE|RB.RIBBON_PANEL_EXT_BUTTON)
+        #
+        # # THE TOOLBAR WITHIN RIBBON MEANS A GRID LIKE PANEL
+        # toolbar = RB.RibbonToolBar(toolbar_panel, wx.ID_ANY)
+        #
+        # toolbar.AddSeparator()
+        # toolbar.AddHybridTool(wx.ID_NEW, wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER, wx.Size(24, 24)))
+        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, wx.Size(24, 23)))
+        #
+        # toolbar.AddSeparator()
+        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
+        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_OTHER, wx.Size(24, 23)))
+        #
+        # toolbar.AddSeparator()
+        # toolbar.AddHybridTool(wx.ID_PRINT, wx.ArtProvider.GetBitmap(wx.ART_PRINT, wx.ART_OTHER, wx.Size(24, 23)),
+        #                       "Print button")
+        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_QUIT, wx.ART_OTHER, wx.Size(24, 23)))
+        #
+        # toolbar.AddSeparator()
+        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_ADD_BOOKMARK, wx.ART_OTHER, wx.Size(24, 23)))
+        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_DEL_BOOKMARK, wx.ART_OTHER, wx.Size(24, 23)))
+        #
+        # toolbar.SetRows(2, 3)
 
         ################################################################################################################################################
         ################################################################################################################################################
@@ -382,7 +382,7 @@ class RibbonFrame(wx.Frame):
 
         # OPTIONS PAGE'S PANELS
         Options_Settings = RB.RibbonPanel(Options, wx.ID_ANY, "Settings", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
-        Options_Window_Options = RB.RibbonPanel(Options, wx.ID_ANY, "Window Options", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
+        Options_Window_Options = RB.RibbonPanel(Options, wx.ID_ANY, "Toggle Design View Options", wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
 
         # "BUTTON BARS" OF EACH PANEL IN OPTIONS PAGE
         Settings_Group = RB.RibbonButtonBar(Options_Settings)
@@ -409,31 +409,31 @@ class RibbonFrame(wx.Frame):
         # Testen Sie the toggle :)
         # AddToggleButton(self, button_id, label, bitmap, help_string="")
 
-        Settings_Group.AddSimpleButton(wx.ID_ANY, "General Settings", options_bmp1,
+        Settings_Group.AddSimpleButton(wx.ID_ANY, "General", options_bmp1,
                                   "This is a tooltip for adding Nodes")
-        Settings_Group.AddSimpleButton(wx.ID_ANY, "Display / Labeling Settings", options_bmp2,
+        Settings_Group.AddSimpleButton(wx.ID_ANY, "Display", options_bmp2,
                                   "This is a tooltip for adding Valves")
-        Settings_Group.AddSimpleButton(wx.ID_ANY, "Unit Settings", options_bmp3,
+        Settings_Group.AddSimpleButton(wx.ID_ANY, "Units", options_bmp3,
                                   "This is a tooltip for adding Compressors")
-        Settings_Group.AddSimpleButton(wx.ID_ANY, "Short-Cut Settings", options_bmp4,
+        Settings_Group.AddSimpleButton(wx.ID_ANY, "Short-Cuts", options_bmp4,
                                   "This is a tooltip for adding Regulators")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Mapping On", options_bmp5,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Map View", options_bmp5,
                                   "This is a tooltip for adding Loss Elements")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Labels On", options_bmp6,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Element Labels", options_bmp6,
                                   "This is a tooltip for adding Nodes")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Grid On", options_bmp7,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Grid", options_bmp7,
                                   "This is a tooltip for adding Valves")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Scale On", options_bmp8,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Scale Bar", options_bmp8,
                                   "This is a tooltip for adding Compressors")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Element Screen On", options_bmp9,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Element Editor", options_bmp9,
                                   "This is a tooltip for adding Regulators")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Outline Screen  On", options_bmp10,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Mini-Map", options_bmp10,
                                   "This is a tooltip for adding Loss Elements")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Calculator On", options_bmp11,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Calculator", options_bmp11,
                                   "This is a tooltip for adding Compressors")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Isometric View On", options_bmp12,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "Isometric View", options_bmp12,
                                   "This is a tooltip for adding Regulators")
-        Windows_options_Group.AddToggleButton(wx.ID_ANY, "3D Screen On", options_bmp13,
+        Windows_options_Group.AddToggleButton(wx.ID_ANY, "3D View", options_bmp13,
                                   "This is a tooltip for adding Loss Elements")
 
         ################################################################################################################################################
@@ -462,9 +462,9 @@ class RibbonFrame(wx.Frame):
         # Testen Sie the toggle :)
         # AddToggleButton(self, button_id, label, bitmap, help_string="")
 
-        Images_Group.AddSimpleButton(wx.ID_ANY, "Change Background Color", options_bmp1,
+        Images_Group.AddSimpleButton(wx.ID_ANY, "Background Color", options_bmp1,
                                   "This is a tooltip for adding Nodes")
-        Images_Group.AddSimpleButton(wx.ID_ANY, "Import/ Change Image", options_bmp2,
+        Images_Group.AddSimpleButton(wx.ID_ANY, "Import Image", options_bmp2,
                                   "This is a tooltip for adding Valves")
         Images_Group.AddSimpleButton(wx.ID_ANY, "Delete Image", options_bmp3,
                                   "This is a tooltip for adding Compressors")
@@ -508,7 +508,10 @@ class RibbonFrame(wx.Frame):
         bmp_ZoomOut = GetBitmap("../icons/Design/Design_12_Zoom_Out.png")
         bmp_Pan = GetBitmap("../icons/Design/Design_14_Panning.png")
 
-        bmp13 = GetBitmap("../icons/Design/Design_17_OK_For_Coord.png")
+        bmp_element_list = GetBitmap("../icons/Design/Design_15_Element_List.png")
+        bmp_element_display = GetBitmap("../icons/Design/Design_16_Element_Display.png")
+        bmp_Ok_for_Coord = GetBitmap("../icons/Design/Design_17_OK_For_Coord.png")
+
 
 
         # PANELS IN DESIGN RIBBON PAGE
@@ -557,25 +560,34 @@ class RibbonFrame(wx.Frame):
         general_tools.AddSimpleButton(ID_REDO, "Redo", bmp_redo,
                                   "This is a tooltip to Redo")
 
-        element_tools.AddSimpleButton(wx.ID_ANY, "Properties", bmp13,
+        element_tools.AddSimpleButton(wx.ID_ANY, "Element List", bmp_element_list,
+                                   "Tool tip")
+        element_tools.AddSimpleButton(wx.ID_ANY, "Element Display", bmp_element_display,
                                   "This is a tooltip to change element properties")
 
         # SIZER FOR COORDINATES PANEL
         coord_sizer = wx.BoxSizer(wx.HORIZONTAL)
+        ## sizer for inside coord_sizer
+        xy_sizer = wx.BoxSizer(wx.VERTICAL)
 
         # CONTROLS FOR COORDINATES PANEL
-        coord_t1 = wx.TextCtrl(_Coordinate_Control, -1, "", size=(80, -1))
-        coord_button_1 = GB.GradientButton(_Coordinate_Control, -1, None, "Coordinate", (100, 50), size=(80, 40))
-        # coord_button_1.SetTopStartColour('BLACK')
-        # coord_button_1.SetTopEndColour('RED')
-        # coord_button_1.SetBottomStartColour('RED')
-        # coord_button_1.SetBottomEndColour('BLACK')
+        coord_x = wx.TextCtrl(_Coordinate_Control, -1, "", size=(80, -1))
+        coord_y = wx.TextCtrl(_Coordinate_Control, -1, "", size=(80, -1))
+        coord_button_1 = GB.GradientButton(_Coordinate_Control, -1, None, "OK", (100, 50), size=(30,30))
+        coord_button_1.SetTopStartColour(wx.Colour(0,77,243,255))
+        coord_button_1.SetTopEndColour(wx.Colour(0,77,253,255))
+        coord_button_1.SetBottomStartColour(wx.Colour(0,77,233,255))
+        coord_button_1.SetBottomEndColour(wx.Colour(0,77,243,255))
+        # coord_button_1.SetForegroundColour(wx.Colour(0,0,0,255))
+        coord_button_1.SetBackgroundColour(wx.Colour(0,77,253,255))
+        coord_button_1.SetPressedTopColour(wx.Colour(0,77,253,255))
+        coord_button_1.SetPressedBottomColour(wx.Colour(0,77,253,255))
+        xy_sizer.Add(coord_x, 1,wx.TOP|wx.RIGHT|wx.LEFT, 10)
+        xy_sizer.Add(coord_y, 1,wx.TOP|wx.RIGHT|wx.LEFT, 10)
+        coord_sizer.Add(xy_sizer, 1, wx.ALL, 1)
+        coord_sizer.Add(coord_button_1, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 10)
 
-        # ADD CONTROLS TO SIZER
-        coord_sizer.Add(coord_t1, 1, wx.TOP|wx.RIGHT|wx.LEFT, 10)
-        coord_sizer.Add(coord_button_1, 1, wx.TOP|wx.RIGHT, 10)
-
-        # SET SIZER FOR _Coordinate_Control
+          # SET SIZER FOR _Coordinate_Control
         _Coordinate_Control.SetSizer(coord_sizer)
 
         ################################################################################################################################################
@@ -776,6 +788,7 @@ class RibbonFrame(wx.Frame):
         Sim_Panel8.SetSizer(simulation_sizer_panel_8)
         # simulation_sizer_panel_8.Fit(Sim_Panel8)
 
+
         ################################################################################################################################################
         ################################################################################################################################################
         ################################################################################################################################################
@@ -803,15 +816,15 @@ class RibbonFrame(wx.Frame):
         results_bmp4 = wx.Image("../icons/Results/Results_04_Result_Graphs.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         results_bmp5 = wx.Image("../icons/Results/Results_05_Generate_Report.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
 
-        Results_Bar.AddSimpleButton(wx.ID_ANY, "Generate Result Tables", results_bmp1,
+        Results_Bar.AddSimpleButton(wx.ID_ANY, "Result Tables", results_bmp1,
                                   "This is a tooltip for adding Nodes")
         Results_Bar.AddSimpleButton(wx.ID_ANY, "Optimization Results", results_bmp2,
                                   "This is a tooltip for adding Nodes")
         Results_Bar.AddSimpleButton(wx.ID_ANY, "Calculations", results_bmp3,
                                   "This is a tooltip for adding Nodes")
-        Results_Bar.AddSimpleButton(wx.ID_ANY, "Generate Result Graphs", results_bmp4,
+        Results_Bar.AddSimpleButton(wx.ID_ANY, "Result Graphs", results_bmp4,
                                   "This is a tooltip for adding Nodes")
-        Results_Bar.AddSimpleButton(wx.ID_ANY, "Generate Report", results_bmp5,
+        Results_Bar.AddSimpleButton(wx.ID_ANY, "Report", results_bmp5,
                                   "This is a tooltip for adding Nodes")
 
         simulation_choice_sizer = wx.BoxSizer()
@@ -832,11 +845,13 @@ class RibbonFrame(wx.Frame):
 
         Help_Panel_Bar = RB.RibbonButtonBar(Help_Panel)
 
-        help_bmp1 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        help_bmp2 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        help_bmp3 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        help_bmp4 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
-        help_bmp5 = wx.Image("../icons/design.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        help_bmp1 = GetBitmap("../icons/Help/Help_01_Contents.png")
+        help_bmp2 = GetBitmap("../icons/Help/Help_02_User_Manuel.png")
+        help_bmp3 = GetBitmap("../icons/Help/Help_03_Examples.png")
+        help_bmp4 = GetBitmap("../icons/Help/Help_04_Licence.png")
+        help_bmp5 = GetBitmap("../icons/Help/Help_05_Ask_About.png")
+        help_bmp6 = GetBitmap("../icons/Help/Help_06_Web_Page.png")
+        help_bmp7 = GetBitmap("../icons/Help/Help_07_About.png")
 
         Help_Panel_Bar.AddSimpleButton(wx.ID_ANY, "Contents", help_bmp1,
                                   "Learn About ASRAD and Pypeline")
@@ -844,9 +859,13 @@ class RibbonFrame(wx.Frame):
                                   "Here's our User manual")
         Help_Panel_Bar.AddSimpleButton(wx.ID_ANY, "Examples", help_bmp3,
                                   "So you don't like to read")
-        Help_Panel_Bar.AddSimpleButton(wx.ID_ANY, "License Status", help_bmp4,
-                                  "")
-        Help_Panel_Bar.AddSimpleButton(wx.ID_ANY, "Licence Add/Remove", help_bmp5,
+        Help_Panel_Bar.AddSimpleButton(wx.ID_ANY, "License", help_bmp4,
+                                  "License")
+        Help_Panel_Bar.AddSimpleButton(wx.ID_ANY, "Ask About", help_bmp5,
+                                  "This is a tooltip for adding Nodes")
+        Help_Panel_Bar.AddSimpleButton(wx.ID_ANY, "Web Page", help_bmp6,
+                                  "This is a tooltip for adding Nodes")
+        Help_Panel_Bar.AddSimpleButton(wx.ID_ANY, "About", help_bmp7,
                                   "This is a tooltip for adding Nodes")
 
         ################################################################################################################################################
@@ -969,9 +988,6 @@ class RibbonFrame(wx.Frame):
     def onSelectButtonClick(self, event):
         self.drawing_canvas.SetMode("Select")
         return
-    def onSelectPipesButtonClick(self, event):
-        self.drawing_canvas.SetMode("SelectEdges")
-        return
 
     def OnDrawingPanelClick(self, event):
         pass
@@ -982,23 +998,21 @@ class RibbonFrame(wx.Frame):
 
     def onDeleteButtonClick(self, event):
         if self.graph.focus_node:
-            self.graph.deleteNode(self.graph.focus_node.label)
-        self.graph.draw(self.drawing_canvas.Canvas)
-        self.drawing_canvas.Canvas.Draw()
-        self.drawing_canvas.Canvas.ClearAll(ResetBB=False)
+            self.graph.deleteNode(self.graph.focus_node)
+        elif self.graph.focus_edge:
+            self.graph.deleteEdge(self.graph.focus_edge)
+
+        self.drawing_canvas.update()
 
 
     def onUndoButtonClick(self, event):
         self.graph.undo()
-        self.graph.draw(self.drawing_canvas.Canvas)
-        self.drawing_canvas.Canvas.Draw()
-        self.drawing_canvas.Canvas.ClearAll(ResetBB=False)
+        self.drawing_canvas.update()
 
     def onRedoButtonClick(self, event):
         self.graph.redo()
-        self.graph.draw(self.drawing_canvas.Canvas)
-        self.drawing_canvas.Canvas.Draw()
-        self.drawing_canvas.Canvas.ClearAll(ResetBB=False)
+        self.drawing_canvas.update()
+
 
 
     ##################################################################################################

@@ -505,7 +505,7 @@ class Graph():
                         ArrowHeadSize=16
                     )
                 else:
-                    Canvas.AddArrowLine(
+                    Canvas.AddSmoothArrowLine(
                         line, LineWidth=LINE_SIZE,
                         LineColor="BLUE",
                         ArrowHeadSize=16

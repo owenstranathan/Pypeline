@@ -124,7 +124,7 @@ class GUIAddPipes(GUIGraph):
         if self.firstNode:
             newPos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
             coords = (self.firstNode.pos , newPos)
-            self.Canvas.AddArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
+            self.Canvas.AddSmoothArrowLine(coords, LineWidth=2, LineColor='BLUE', ArrowHeadSize=16)
             #we draw the graoh here because the state has most probably changed
             self.update()
 

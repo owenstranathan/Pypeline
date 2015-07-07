@@ -489,9 +489,8 @@ class Graph():
     ##this uses BFT(breadth first traversal) to draw every node and
     ##edge in the graph
     def draw(self, Canvas):
-        YELLOW = (179, 179, 70, 255)
         NODE_SIZE = 10 /Canvas.Scale ##the physical size of the node as drawn on the canvas
-        LINE_SIZE = 5 #* Canvas.Scale
+        LINE_SIZE = 4 #* Canvas.Scale
 
         #this adds lines and circles to the graph
         for node in self.nodes:
@@ -499,17 +498,17 @@ class Graph():
                 line = (node.pos, edge.node.pos)
                 edge.setLine(line)
                 if edge is self.focus_edge:
-                    Canvas.AddArrowLine(
-                        line, LineWidth=LINE_SIZE,
-                        LineColor = YELLOW,
-                        ArrowHeadSize=16
+                    Canvas.AddLine(
+                        line, LineWidth=LINE_SIZE + 8,
+                        LineColor = "YELLOW"
+                        #ArrowHeadSize=16
                     )
-                else:
-                    Canvas.AddArrowLine(
-                        line, LineWidth=LINE_SIZE,
-                        LineColor="BLUE",
-                        ArrowHeadSize=16
-                    )
+
+                Canvas.AddLine(
+                    line, LineWidth=LINE_SIZE,
+                    LineColor="BLACK"
+                    #ArrowHeadSize=16
+                )
                 for element in edge.elements:
                     element.draw(Canvas, edge.line)
                     # Canvas.AddRectangle(
@@ -526,19 +525,19 @@ class Graph():
             if node is self.focus_node:
                 Canvas.AddCircle(
                     node.pos,
-                    NODE_SIZE,
+                    NODE_SIZE + 6,
                     LineWidth=1,
                     LineColor='YELLOW',
                     FillColor='YELLOW'
                 )
-            else:
-                Canvas.AddCircle(
-                    node.pos,
-                    NODE_SIZE,
-                    LineWidth=1,
-                    LineColor='BLUE',
-                    FillColor='BLUE'
-                )
+
+            Canvas.AddCircle(
+                node.pos,
+                NODE_SIZE,
+                LineWidth=1,
+                LineColor='BLACK',
+                FillColor='BLACK'
+            )
         # ##This just puts a dotted square around the focus node
         # if self.focus_node:
         #     focus_box_wh = (NODE_SIZE + 5, NODE_SIZE + 5 )

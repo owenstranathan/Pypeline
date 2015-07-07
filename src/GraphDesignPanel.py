@@ -14,8 +14,10 @@ import numpy as N
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode, Resources
 import PypeGraph as PG
 import Geometry as Geom
+import networkx as nx
 
 '''Global variables'''
+
 
 GRAPH_HEIGHT = 640
 GRAPH_WIDTH = 800

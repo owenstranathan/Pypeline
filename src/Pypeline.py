@@ -325,7 +325,11 @@ class RibbonFrame(wx.Frame):
         # http://wxpython.org/Phoenix/docs/html/lib.agw.ribbon.panel.RibbonPanel.html
         # RIBBON_PANEL_EXT_BUTTON
 
+        primary = wx.Colour(0, 0, 10)
+        secondary = wx.Colour(0, 0, 0)
+        tertiary = wx.Colour(0, 0, 0)
         self._ribbon = RB.RibbonBar(panel, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+        self._ribbon.GetArtProvider().SetColourScheme(primary, secondary, tertiary)
         self._bitmap_creation_dc = wx.MemoryDC()
         self._colour_data = wx.ColourData()
 

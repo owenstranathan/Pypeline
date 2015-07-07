@@ -1,3 +1,4 @@
+
 '''
     PypeGraph.py defines the underlying functionality
     behind the pretty graphics of the GUI
@@ -498,13 +499,13 @@ class Graph():
                 line = (node.pos, edge.node.pos)
                 edge.setLine(line)
                 if edge is self.focus_edge:
-                    Canvas.AddLine(
+                    Canvas.AddArrowLine(
                         line, LineWidth=LINE_SIZE + 8,
                         LineColor = "YELLOW"
                         #ArrowHeadSize=16
                     )
 
-                Canvas.AddLine(
+                Canvas.AddArrowLine(
                     line, LineWidth=LINE_SIZE,
                     LineColor="BLACK"
                     #ArrowHeadSize=16

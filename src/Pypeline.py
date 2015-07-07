@@ -231,23 +231,9 @@ class Notebook(wx.Notebook):
     def __init__(self, parent):
         wx.Notebook.__init__(self, parent, id=wx.ID_ANY, size=(278, 30), style=
                              wx.BK_TOP
-                             #wx.BK_TOP
-                             #wx.BK_BOTTOM
-                             #wx.BK_LEFT
-                             #wx.BK_RIGHT
                              )
-
-
-        # HOW TO PUT IMAGES ON NOTEBOOK TABS
-        # first make the image list:
-        # il = wx.ImageList(16, 16)
-        # idx1 = il.Add(images.Smiles.GetBitmap())
-        # self.AssignImageList(il)
-        #
-        # self.SetPageImage(0, idx1)
-
-        # ADD NOTEBOOK PAGES
         self.AddPage(NodeTabPanel.NodeTabPanel(self), "ND")
+
         self.AddPage(PipeTabPanel.PipeTabPanel(self), "PP")
         self.AddPage(ValveTabPanel.ValveTabPanel(self), "VV")
         self.AddPage(CompressorTabPanel.CompressorTabPanel(self), "CP")
@@ -283,8 +269,15 @@ class RibbonFrame(wx.Frame):
 
         # CHANGE WHEN WE LEARN HOW TO USE TOP LEFT CORNER OF RIBBON TOOLBAR
         # b = wx.Button(self, wx.ID_ANY, "Default Button", pos=(1, 1), size = (20, 20))
+        #
+        # button_1 = GB.GradientButton(self, -1, None, "File", pos=(0, 0), size=(25, 15))
+        # button_1.SetTopEndColour(wx.Colour(135, 206, 250))
+        # button_1.SetTopStartColour(wx.Colour(135, 206, 250))
+        # button_1.SetBottomEndColour(wx.Colour(30, 144, 255))
+        # button_1.SetBottomStartColour(wx.Colour(30, 144, 255))
 
         menubar = wx.MenuBar()
+
         # CATEGORIES WITHIN FILE SHOULD BE SEPARATED ACCORDING TO FUNCTION
         fileMenu = wx.Menu()
         fileMenu.Append(wx.ID_NEW, '&New')
@@ -324,18 +317,24 @@ class RibbonFrame(wx.Frame):
         # TRYING TO ADD DROPDOWN MENU TO FIRST PANEL
         # http://wxpython.org/Phoenix/docs/html/lib.agw.ribbon.panel.RibbonPanel.html
         # RIBBON_PANEL_EXT_BUTTON
-
-        primary = wx.Colour(0, 0, 10)
-        secondary = wx.Colour(0, 0, 0)
-        tertiary = wx.Colour(0, 0, 0)
         self._ribbon = RB.RibbonBar(panel, wx.ID_ANY, agwStyle=RB.RIBBON_BAR_DEFAULT_STYLE|RB.RIBBON_BAR_SHOW_PANEL_EXT_BUTTONS)
+
+        # COLOR SELECTION
+        # RGB VALUE FOR MATTE GREY
+        # 204, 204, 204
+        primary = wx.Colour(200, 200, 200)
+        secondary = wx.Colour(135, 206, 250)
+        tertiary = wx.Colour(102, 102, 102)
         self._ribbon.GetArtProvider().SetColourScheme(primary, secondary, tertiary)
+
+
         self._bitmap_creation_dc = wx.MemoryDC()
         self._colour_data = wx.ColourData()
 
+        ################################################################################################################################################
+        ################################################################################################################################################
 
         '''RIBBON PAGES'''
-        # File = RB.RibbonPage(self._ribbon, wx.ID_ANY, "FILE")
         Options = RB.RibbonPage(self._ribbon, wx.ID_ANY, "OPTIONS")
         Mapping = RB.RibbonPage(self._ribbon, wx.ID_ANY, "MAPPING")
         Design = RB.RibbonPage(self._ribbon, wx.ID_ANY, "DESIGN")
@@ -343,42 +342,6 @@ class RibbonFrame(wx.Frame):
         Results = RB.RibbonPage(self._ribbon, wx.ID_ANY, "RESULTS")
         Help = RB.RibbonPage(self._ribbon, wx.ID_ANY, "HELP")
 
-
-        # ################################################################################################################################################
-        # ################################################################################################################################################
-        # ################################################################################################################################################
-        #
-        # '''FILE PAGE'''
-        #
-        # # REALLY NEED TO CHANGE THE NAME FROM TOOLBAR TO FILE OR WHATEVER NAME WE'RE USING
-        #
-        #
-        # toolbar_panel = RB.RibbonPanel(File, wx.ID_ANY, "", wx.NullBitmap, wx.DefaultPosition,
-        #                                wx.DefaultSize, agwStyle=RB.RIBBON_PANEL_NO_AUTO_MINIMISE|RB.RIBBON_PANEL_EXT_BUTTON)
-        #
-        # # THE TOOLBAR WITHIN RIBBON MEANS A GRID LIKE PANEL
-        # toolbar = RB.RibbonToolBar(toolbar_panel, wx.ID_ANY)
-        #
-        # toolbar.AddSeparator()
-        # toolbar.AddHybridTool(wx.ID_NEW, wx.ArtProvider.GetBitmap(wx.ART_NEW, wx.ART_OTHER, wx.Size(24, 24)))
-        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_OPEN, wx.ART_OTHER, wx.Size(24, 23)))
-        #
-        # toolbar.AddSeparator()
-        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE, wx.ART_OTHER, wx.Size(24, 23)))
-        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_FILE_SAVE_AS, wx.ART_OTHER, wx.Size(24, 23)))
-        #
-        # toolbar.AddSeparator()
-        # toolbar.AddHybridTool(wx.ID_PRINT, wx.ArtProvider.GetBitmap(wx.ART_PRINT, wx.ART_OTHER, wx.Size(24, 23)),
-        #                       "Print button")
-        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_QUIT, wx.ART_OTHER, wx.Size(24, 23)))
-        #
-        # toolbar.AddSeparator()
-        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_ADD_BOOKMARK, wx.ART_OTHER, wx.Size(24, 23)))
-        # toolbar.AddTool(wx.ID_ANY, wx.ArtProvider.GetBitmap(wx.ART_DEL_BOOKMARK, wx.ART_OTHER, wx.Size(24, 23)))
-        #
-        # toolbar.SetRows(2, 3)
-
-        ################################################################################################################################################
         ################################################################################################################################################
         ################################################################################################################################################
 
@@ -577,22 +540,26 @@ class RibbonFrame(wx.Frame):
         # CONTROLS FOR COORDINATES PANEL
         coord_x = wx.TextCtrl(_Coordinate_Control, -1, "", size=(80, -1))
         coord_y = wx.TextCtrl(_Coordinate_Control, -1, "", size=(80, -1))
+
         coord_button_1 = GB.GradientButton(_Coordinate_Control, -1, None, "OK", (100, 50), size=(30,30))
         coord_button_1.SetTopStartColour(wx.Colour(0,77,243,255))
         coord_button_1.SetTopEndColour(wx.Colour(0,77,253,255))
         coord_button_1.SetBottomStartColour(wx.Colour(0,77,233,255))
         coord_button_1.SetBottomEndColour(wx.Colour(0,77,243,255))
+
         # coord_button_1.SetForegroundColour(wx.Colour(0,0,0,255))
         coord_button_1.SetBackgroundColour(wx.Colour(0,77,253,255))
         coord_button_1.SetPressedTopColour(wx.Colour(0,77,253,255))
         coord_button_1.SetPressedBottomColour(wx.Colour(0,77,253,255))
-        xy_sizer.Add(coord_x, 1,wx.TOP|wx.RIGHT|wx.LEFT, 10)
-        xy_sizer.Add(coord_y, 1,wx.TOP|wx.RIGHT|wx.LEFT, 10)
+
+        xy_sizer.Add(coord_x, 0,wx.TOP|wx.RIGHT|wx.LEFT, 5)
+        xy_sizer.Add(coord_y, 0,wx.TOP|wx.RIGHT|wx.LEFT, 5)
         coord_sizer.Add(xy_sizer, 1, wx.ALL, 1)
         coord_sizer.Add(coord_button_1, 0, wx.RIGHT|wx.ALIGN_CENTER_VERTICAL, 10)
 
           # SET SIZER FOR _Coordinate_Control
         _Coordinate_Control.SetSizer(coord_sizer)
+        coord_sizer.Fit(_Coordinate_Control)
 
         ################################################################################################################################################
         ################################################################################################################################################
@@ -600,43 +567,35 @@ class RibbonFrame(wx.Frame):
 
         '''SIMULATION SETTINGS PAGE'''
 
-        # PANELS AND BUTTONS BARS
         Sim_Panel1 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Simulation",
                                      wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
                                      agwStyle=RB.RIBBON_PANEL_DEFAULT_STYLE)
-        Sim_Panel2 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "General",
+        Sim_Panel2 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Settings",
                                      wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
                                      agwStyle=RB.RIBBON_PANEL_DEFAULT_STYLE)
-        Sim_Panel3 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Simulation Details",
+        Sim_Panel3 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Check and Run",
                                      wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
                                      agwStyle=RB.RIBBON_PANEL_DEFAULT_STYLE)
-        Sim_Panel4 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Optimization",
+        Sim_Panel4 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Simulation Details",
                                      wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
                                      agwStyle=RB.RIBBON_PANEL_DEFAULT_STYLE)
-        # Sim_Panel5 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Simulation",
-        #                              wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
-        #                              agwStyle=RB.RIBBON_PANEL_DEFAULT_STYLE)
-        # Sim_Panel6 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Simulation check and run",
-        #                              wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
-        #                              agwStyle=RB.RIBBON_PANEL_DEFAULT_STYLE)
-        Sim_Panel7 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Simulation Check and Run",
+        Sim_Panel5 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Simulation Success",
                                      wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
                                      agwStyle=RB.RIBBON_PANEL_DEFAULT_STYLE)
-        Sim_Panel8 = RB.RibbonPanel(Simulation_Settings, wx.ID_ANY, "Simulation Success",
-                                     wx.NullBitmap, wx.DefaultPosition, wx.DefaultSize,
-                                     agwStyle=RB.RIBBON_PANEL_DEFAULT_STYLE)
+
+        #######################################################################################
+
+        sim_bmp1 = GetBitmap("../icons/Simulation/Simulation_01_Simulation.png")
+        sim_bmp2 = GetBitmap("../icons/Simulation/Simulation_02_Simulation_Settings.png")
+        sim_bmp3 = GetBitmap("../icons/Simulation/Simulation_03_Fluid_Settings.png")
+        sim_bmp4 = GetBitmap("../icons/Simulation/Simulation_04_Display_Settings.png")
+        sim_bmp5 = GetBitmap("../icons/Simulation/Simulation_05_Initialize.png")
+        sim_bmp6 = GetBitmap("../icons/Simulation/Simulation_06_Run.png")
 
         Sim_Bar1 = RB.RibbonButtonBar(Sim_Panel2)
-        Sim_Bar2 = RB.RibbonButtonBar(Sim_Panel4)
+        Sim_Bar2 = RB.RibbonButtonBar(Sim_Panel3)
 
-        # ICONS
-        sim_bmp1 =  GetBitmap("../icons/design.png")
-        sim_bmp2 =  GetBitmap("../icons/design.png")
-        sim_bmp3 =  GetBitmap("../icons/design.png")
-        sim_bmp4 =  GetBitmap("../icons/design.png")
-        sim_bmp5 =  GetBitmap("../icons/design.png")
-
-        # CONTROLS FOR PANEL 1
+           # CONTROLS FOR PANEL 1
         simulation_choices1 = ["Simulation 1", "Simulation 2", "Simulation 3",
                                       "Simulation 4", "Simulation 5", "Simulation 6"]
         simulation_choices2 = ["Steady State", "Transient", "Steady State with Heat Transfer",]
@@ -647,151 +606,95 @@ class RibbonFrame(wx.Frame):
                           (188, -1), simulation_choices2, wx.CB_DROPDOWN)
 
         # CONTROLS FOR PANEL 2
-        Sim_Bar1.AddSimpleButton(wx.ID_ANY, "New Simulation Design", sim_bmp1,
+        Sim_Bar1.AddSimpleButton(wx.ID_ANY, "Simulation", sim_bmp1,
                                   "Create and Name a new design in the drawing window")
-        Sim_Bar1.AddSimpleButton(wx.ID_ANY, "Simulation Display Settings", sim_bmp2,
+        Sim_Bar1.AddSimpleButton(wx.ID_ANY, "Simulation Settings", sim_bmp2,
                                   "Colour range selection and labels for Design")
-        Sim_Bar1.AddSimpleButton(wx.ID_ANY, "Design To Simulate", sim_bmp3,
-                                  "Choose which design to simulate")
-        Sim_Bar1.AddSimpleButton(wx.ID_ANY, "Fluid Properties", sim_bmp4,
-                                  "Choose and edit fluid properties")
-
-        Sim_Bar2.AddSimpleButton(wx.ID_ANY, "Optimization Window", sim_bmp4,
-                                  "See possible Optimizations that can be made")
+        Sim_Bar1.AddSimpleButton(wx.ID_ANY, "Fluid Properties", sim_bmp3,
+                                  "Choose and Edit Fluid Properties")
+        Sim_Bar1.AddSimpleButton(wx.ID_ANY, "Display Settings", sim_bmp4,
+                                  "Colour Range Selection and Labels for Design")
 
         # CONTROLS FOR PANEL 3
-        sim_st1 = TransparentText(Sim_Panel3, -1, "Maximum Iteration")
+        Sim_Bar2.AddSimpleButton(wx.ID_ANY, "Initialize", sim_bmp5,
+                                  "Checks connections and parameters")
+        Sim_Bar2.AddSimpleButton(wx.ID_ANY, "Run", sim_bmp6,
+                                  "Run selected simulation")
 
-        sim_st2 = TransparentText(Sim_Panel3, -1, "Convergence")
+        # CONTROLS FOR PANEL 4
+        simulation_trans_text1 = TransparentText(Sim_Panel4, -1, "Maximum Iteration", size=wx.DefaultSize)
+        simulation_trans_text2 = TransparentText(Sim_Panel4, -1, "Convergence", size=wx.DefaultSize)
+        simulation_trans_text3 = TransparentText(Sim_Panel4, -1, "Tolerance", size=wx.DefaultSize)
 
-        sim_st2.SetBackgroundColour(wx.Colour(wx.TRANSPARENT))
+        simulation_t1 = wx.TextCtrl(Sim_Panel4, -1, "", size=wx.DefaultSize)
+        simulation_t2 = wx.TextCtrl(Sim_Panel4, -1, "", size=wx.DefaultSize)
+        simulation_t3 = wx.TextCtrl(Sim_Panel4, -1, "", size=wx.DefaultSize)
 
-        sim_st3 = TransparentText(Sim_Panel3, -1, "Tolerance")
-        # sim_st3.SetBackgroundColour(wx.Colour(255, 251, 204))
+        # CONTROLS FOR PANEL 5
+        simulation_trans_text4 = TransparentText(Sim_Panel5, -1, "Simulation Status", size=wx.DefaultSize)
+        simulation_trans_text5 = TransparentText(Sim_Panel5, -1, "Simulation Errors", size=wx.DefaultSize)
+        simulation_trans_text6 = TransparentText(Sim_Panel5, -1, "Convergence Time", size=wx.DefaultSize)
+        simulation_trans_text7 = TransparentText(Sim_Panel5, -1, "Total Iteration", size=wx.DefaultSize)
 
-        t1 = wx.TextCtrl(Sim_Panel3, -1, "", size=(80, -1))
-        t2 = wx.TextCtrl(Sim_Panel3, -1, "", size=(80, -1))
-        t3 = wx.TextCtrl(Sim_Panel3, -1, "", size=(80, -1))
+        t4 = wx.TextCtrl(Sim_Panel5, -1, "", size=wx.DefaultSize)
+        t5 = wx.TextCtrl(Sim_Panel5, -1, "", size=wx.DefaultSize)
+        t6 = wx.TextCtrl(Sim_Panel5, -1, "", size=wx.DefaultSize)
+        t7 = wx.TextCtrl(Sim_Panel5, -1, "", size=wx.DefaultSize)
 
-        # CONTROLS FOR PANEL 7
-
-        sim_run_button_1 = GB.GradientButton(Sim_Panel7, -1, None, "RUN", (100, 50), size=(150, -1))
-
-        # sim_run_button_1.SetTopStartColour('WHITE')
-        # sim_run_button_1.SetTopEndColour('BLUE')
-        # sim_run_button_1.SetBottomStartColour('BLUE')
-        # sim_run_button_1.SetBottomEndColour('WHITE')
-
-        sim_run_button_2 = GB.GradientButton(Sim_Panel7, -1, None, "CHECK", (100, 50), size=(75, -1))
-
-        # sim_run_button_2.SetTopStartColour('WHITE')
-        # sim_run_button_2.SetTopEndColour('BLUE')
-        # sim_run_button_2.SetBottomStartColour('BLUE')
-        # sim_run_button_2.SetBottomEndColour('WHITE')
-
-        sim_run_button_3 = GB.GradientButton(Sim_Panel7, -1, None, "INITIALIZE", (100, 50), size=(75, -1))
-
-        # sim_run_button_3.SetTopStartColour('WHITE')
-        # sim_run_button_3.SetTopEndColour('BLUE')
-        # sim_run_button_3.SetBottomStartColour('BLUE')
-        # sim_run_button_3.SetBottomEndColour('WHITE')
-
-        # SetForegroundColour
-
-         # CONTROLS FOR PANEL 8
-        sim_st4 = TransparentText(Sim_Panel8, -1, "Simulation Status")
-        sim_st5 = TransparentText(Sim_Panel8, -1, "Simulaion Errors")
-        sim_st6 = TransparentText(Sim_Panel8, -1, "Convergence Time")
-        sim_st7 = TransparentText(Sim_Panel8, -1, "Total Iteration")
-
-        t4 = wx.TextCtrl(Sim_Panel8, -1, "", size=(80, -1))
-        t5 = wx.TextCtrl(Sim_Panel8, -1, "", size=(80, -1))
-        t6 = wx.TextCtrl(Sim_Panel8, -1, "", size=(80, -1))
-        t7 = wx.TextCtrl(Sim_Panel8, -1, "", size=(80, -1))
-
-        # SIZERS
-        # SIZER FOR PANEL 1
+        # SIZERS FOR PANEL 1
         simulation_sizer1 = wx.BoxSizer(wx.VERTICAL)
 
-        # SIZER FOR PANEL 2
-        simulation_sizer2 = wx.BoxSizer(wx.HORIZONTAL)
-        simulation_sizer2.AddStretchSpacer(1)
-        simulation_sizer3 = wx.BoxSizer(wx.VERTICAL)
-        simulation_sizer3.AddStretchSpacer(1)
-        simulation_sizer4 = wx.BoxSizer(wx.VERTICAL)
-        simulation_sizer4.AddStretchSpacer(1)
-
-        # SIZER FOR PANEL 7
-        simulation_sizer_panel_7 = wx.BoxSizer(wx.VERTICAL)
-        simulation_sizer_panel_7_2 = wx.BoxSizer(wx.HORIZONTAL)
-        simulation_sizer_panel_7_2.AddStretchSpacer(1)
-
-        # SIZERS FOR PANEL 8
-        simulation_sizer_panel_8 = wx.BoxSizer(wx.HORIZONTAL)
-        simulation_sizer_panel_8.AddStretchSpacer(1)
-        simulation_sizer_panel_81 = wx.BoxSizer(wx.VERTICAL)
-        simulation_sizer_panel_81.AddStretchSpacer(1)
-        simulation_sizer_panel_82 = wx.BoxSizer(wx.VERTICAL)
-        simulation_sizer_panel_82.AddStretchSpacer(1)
-        simulation_sizer_panel_83 = wx.BoxSizer(wx.VERTICAL)
-        simulation_sizer_panel_83.AddStretchSpacer(1)
-        simulation_sizer_panel_84 = wx.BoxSizer(wx.VERTICAL)
-        simulation_sizer_panel_84.AddStretchSpacer(1)
-
-        # ADDING TO RESPECTIVE SIZERS
-        # ADDING FOR PANEL 1
         simulation_sizer1.Add(sim_cb1, 0, wx.TOP, 15)
         simulation_sizer1.Add(sim_cb2, 0, wx.BOTTOM, 5)
-
-        # ADDING FOR PANEL 2
-        simulation_sizer2.Add(simulation_sizer3, 0, wx.TOP, 0)
-        simulation_sizer2.Add(simulation_sizer4, 0, wx.TOP, 0)
-
-        simulation_sizer3.Add(sim_st1, 0, wx.TOP, 3)
-        simulation_sizer3.Add(sim_st2, 0, wx.TOP, 8)
-        simulation_sizer3.Add(sim_st3, 0, wx.TOP, 8)
-
-        simulation_sizer4.Add(t1, 0, wx.TOP, 0)
-        simulation_sizer4.Add(t2, 0, wx.TOP, 0)
-        simulation_sizer4.Add(t3, 0, wx.TOP, 0)
-
-        # ADDING FOR PANEL 7
-        simulation_sizer_panel_7.Add(sim_run_button_1, 0, wx.TOP|wx.RIGHT|wx.LEFT, 2)
-        simulation_sizer_panel_7.Add(simulation_sizer_panel_7_2, 0, wx.TOP|wx.RIGHT|wx.LEFT, 2)
-
-        simulation_sizer_panel_7_2.Add(sim_run_button_2, 0, wx.TOP|wx.RIGHT|wx.LEFT, 2)
-        simulation_sizer_panel_7_2.Add(sim_run_button_3, 0, wx.TOP|wx.RIGHT|wx.LEFT, 2)
-
-
-        # ADDING FOR PANEL 8
-        simulation_sizer_panel_8.Add(simulation_sizer_panel_81, 0, wx.TOP, 0)
-        simulation_sizer_panel_8.Add(simulation_sizer_panel_82, 0, wx.TOP, 0)
-        simulation_sizer_panel_8.Add(simulation_sizer_panel_83, 0, wx.TOP, 0)
-        simulation_sizer_panel_8.Add(simulation_sizer_panel_84, 0, wx.TOP, 0)
-
-        simulation_sizer_panel_81.Add(sim_st4, 0, wx.TOP, 3)
-        simulation_sizer_panel_81.Add(sim_st5, 0, wx.TOP, 8)
-        simulation_sizer_panel_81.Add(sim_st6, 0, wx.TOP, 8)
-
-        simulation_sizer_panel_82.Add(t4, 0, wx.TOP, 0)
-        simulation_sizer_panel_82.Add(t5, 0, wx.TOP, 0)
-        simulation_sizer_panel_82.Add(t6, 0, wx.TOP, 0)
-
-        # CAN ADD MAX 2 MORE ROWS
-        simulation_sizer_panel_83.Add(sim_st7, 0, wx.TOP, 3)
-        simulation_sizer_panel_84.Add(t7, 0, wx.TOP, 0)
 
         Sim_Panel1.SetSizer(simulation_sizer1)
         simulation_sizer1.Fit(Sim_Panel1)
 
-        Sim_Panel3.SetSizer(simulation_sizer2)
-        simulation_sizer2.Fit(Sim_Panel1)
+         # SIZERS FOR PANEL 4
+        simulation_sizer2 = wx.BoxSizer(wx.HORIZONTAL)
+        simulation_sizer3 = wx.BoxSizer(wx.VERTICAL)
+        simulation_sizer4 = wx.BoxSizer(wx.VERTICAL)
 
-        Sim_Panel7.SetSizer(simulation_sizer_panel_7)
+        simulation_sizer2.Add(simulation_sizer3, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+        simulation_sizer2.Add(simulation_sizer4, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
 
-        Sim_Panel8.SetSizer(simulation_sizer_panel_8)
-        # simulation_sizer_panel_8.Fit(Sim_Panel8)
+        simulation_sizer3.Add(simulation_trans_text1, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 3)
+        simulation_sizer3.Add(simulation_trans_text2, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 8)
+        simulation_sizer3.Add(simulation_trans_text3, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 8)
 
+        simulation_sizer4.Add(simulation_t1, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+        simulation_sizer4.Add(simulation_t2, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+        simulation_sizer4.Add(simulation_t3, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+
+        Sim_Panel4.SetSizer(simulation_sizer2)
+        simulation_sizer2.Fit(Sim_Panel4)
+
+        # SIZERS FOR PANEL 5
+        simulation_sizer5 = wx.BoxSizer(wx.HORIZONTAL)
+        simulation_sizer6 = wx.BoxSizer(wx.VERTICAL)
+        simulation_sizer7 = wx.BoxSizer(wx.VERTICAL)
+        simulation_sizer8 = wx.BoxSizer(wx.VERTICAL)
+        simulation_sizer9 = wx.BoxSizer(wx.VERTICAL)
+
+        simulation_sizer5.Add(simulation_sizer6, 1, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+        simulation_sizer5.Add(simulation_sizer7, 1, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+        simulation_sizer5.Add(simulation_sizer8, 1, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+        simulation_sizer5.Add(simulation_sizer9, 1, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+
+        simulation_sizer6.Add(simulation_trans_text4, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 3)
+        simulation_sizer6.Add(simulation_trans_text5, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 8)
+        simulation_sizer6.Add(simulation_trans_text6, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 8)
+
+        simulation_sizer7.Add(t4, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+        simulation_sizer7.Add(t5, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+        simulation_sizer7.Add(t6, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+
+        simulation_sizer8.Add(simulation_trans_text7, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 3)
+
+        simulation_sizer9.Add(t7, 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL, 0)
+
+        Sim_Panel5.SetSizer(simulation_sizer5)
+        simulation_sizer5.Fit(Sim_Panel5)
 
         ################################################################################################################################################
         ################################################################################################################################################
@@ -876,7 +779,7 @@ class RibbonFrame(wx.Frame):
         ################################################################################################################################################
         ################################################################################################################################################
 
-        '''REMAINING INIT FOR RIBBON'''
+        '''REMAINING INITIALIZATION FOR RIBBON'''
 
         label_font = wx.Font(8, wx.FONTFAMILY_DEFAULT, wx.FONTSTYLE_NORMAL, wx.FONTWEIGHT_LIGHT)
         self._bitmap_creation_dc.SetFont(label_font)

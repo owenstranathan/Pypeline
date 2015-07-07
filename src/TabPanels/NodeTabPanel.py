@@ -521,7 +521,8 @@ class NodeTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        self.SetBackgroundColour((202,223,244))
+        primary = wx.Colour(204, 204, 204, 150)
+        self.SetBackgroundColour(primary)
 
         nodedata = ListCtrl.nodedata.items()
         nodedata.sort()

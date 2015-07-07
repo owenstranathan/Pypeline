@@ -15,7 +15,7 @@ import numpy as N
 from wx.lib.floatcanvas import NavCanvas, FloatCanvas, GUIMode, Resources
 import PypeGraph as PG
 import Geometry as Geom
-import networkx as nx
+# import networkx as nx
 
 '''Global variables'''
 

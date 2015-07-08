@@ -413,7 +413,7 @@ class Graph():
         ##stash the node you are about to remove
         deadNode = self.nodes[-1]
         ##delete the node
-        self.deleteNode(self.nodes[-1].label)
+        self.deleteNode(self.nodes[-1])
         ##return the nead node
         return deadNode
 

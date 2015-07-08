@@ -180,6 +180,7 @@ class GUISelect(GUIGraph):
         self.selection = None
 
     def OnLeftDown(self, event):
+        self.update()
         #get the snap position of the selection
         snap_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
         real_pos = self.Canvas.PixelToWorld(event.GetPosition())

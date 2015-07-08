@@ -469,7 +469,7 @@ class CompressorTabPanel(scrolled.ScrolledPanel):
     def __init__(self, parent):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(250, 192, 143, 150)
         self.SetBackgroundColour(primary)
         nodedata = ListCtrl.nodedata.items()
         nodedata.sort()

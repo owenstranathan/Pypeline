@@ -470,7 +470,7 @@ class RegulatorTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(251,250, 174, 150)
         self.SetBackgroundColour(primary)
 
         nodedata = ListCtrl.nodedata.items()

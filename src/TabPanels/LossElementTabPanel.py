@@ -415,7 +415,7 @@ class LossElementTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(204,193,217, 150)
         self.SetBackgroundColour(primary)
         nodedata = ListCtrl.nodedata.items()
         nodedata.sort()

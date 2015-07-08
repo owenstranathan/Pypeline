@@ -519,7 +519,7 @@ class PipeTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(183, 221, 232, 150)
         self.SetBackgroundColour(primary)
 
         pipedata = ListCtrl.pipedata.items()

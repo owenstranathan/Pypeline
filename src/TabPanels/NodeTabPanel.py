@@ -294,7 +294,9 @@ class NodePhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+
+
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 

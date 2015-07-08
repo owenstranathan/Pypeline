@@ -322,7 +322,7 @@ class RibbonFrame(wx.Frame):
         # COLOR SELECTION
         # RGB VALUE FOR MATTE GREY
         # 204, 204, 204
-        primary = wx.Colour(200, 200, 200)
+        primary = wx.Colour(204, 204, 204)
         secondary = wx.Colour(135, 206, 250)
         tertiary = wx.Colour(102, 102, 102)
         self._ribbon.GetArtProvider().SetColourScheme(primary, secondary, tertiary)

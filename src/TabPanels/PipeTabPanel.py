@@ -239,19 +239,19 @@ class PipeInfoPanel(wx.Panel):
         tctrl2 = wx.TextCtrl(panel, -1, "N34567",size=(55,-1))
         tctrl3 = wx.TextCtrl(panel, -1, style=wx.TE_MULTILINE)
 
-        bmp1= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp1= wx.Image("pipecoordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp1, wx.BLUE)
         bmp1.SetMask(mask)
 
-        button1 = wx.BitmapButton(self, -1, bmp1, (5, 5),
+        button1 = wx.BitmapButton(panel, -1, bmp1, (5, 5),
                        (bmp1.GetWidth(), bmp1.GetHeight()))
         button1.SetToolTipString("Selection From Map")
 
-        bmp2= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp2= wx.Image("pipecoordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp2, wx.BLUE)
         bmp2.SetMask(mask)
 
-        button2 = wx.BitmapButton(self, -1, bmp2, (5, 5),
+        button2 = wx.BitmapButton(panel, -1, bmp2, (5, 5),
                        (bmp2.GetWidth(), bmp2.GetHeight()))
         button2.SetToolTipString("Selection From Map")
 

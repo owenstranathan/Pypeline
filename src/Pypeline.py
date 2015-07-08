@@ -6,7 +6,7 @@ import sys
 import images
 import wx.aui
 import wx.lib.agw.ribbon as RB
-from wx.lib.floatcanvas import Resources
+from floatcanvas import Resources
 import GraphDesignPanel as  GDP
 import PypeGraph as PypeGraph
 import TabPanels.NodeTabPanel as NodeTabPanel

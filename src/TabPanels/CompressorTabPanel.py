@@ -233,20 +233,20 @@ class CompressorInfoPanel(wx.Panel):
         text2 = wx.StaticText(panel, -1, "COMMENT :")
         text3 = wx.StaticText(panel, -1, "TYPE :")
 
-        tctrl1 = wx.TextCtrl(panel, -1, "P345613",size=(60,-1))
+        tctrl1 = wx.TextCtrl(panel, -1, "P345613",size=(80,-1))
         tctrl2 = wx.TextCtrl(panel, -1, style=wx.TE_MULTILINE)
 
         node_choices = [u"Generic Compressor",u"Typical Compressor", u"Compressor Station"]
         choices1 = wx.Choice(panel, wx.ID_ANY, choices=node_choices)
         choices1.SetSelection(0)
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
-        button = wx.BitmapButton(self, -1, bmp, (5, 5),
+        button1 = wx.BitmapButton(panel, -1, bmp, (5, 5),
                        (bmp.GetWidth(), bmp.GetHeight()))
-        button.SetToolTipString("Coordinate Selection From Map")
+        button1.SetToolTipString("Coordinate Selection From Map")
 
         # MAKE SIZERS
         sizer1 = wx.BoxSizer(wx.VERTICAL)
@@ -262,7 +262,7 @@ class CompressorInfoPanel(wx.Panel):
 
         sizer2.Add(text1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0)
         sizer2.Add(tctrl1, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 20)
-        sizer2.Add(button, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 20)
+        sizer2.Add(button1, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 10)
 
         sizer3.Add(text2, 1, wx.ALIGN_CENTER_VERTICAL, 0)
         sizer3.Add(tctrl2, 2, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 1)
@@ -290,7 +290,7 @@ class CompressorPhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 

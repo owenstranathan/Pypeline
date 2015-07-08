@@ -372,7 +372,7 @@ class CompressorPropertiesPanel(wx.Panel):
 
         radio1 = wx.RadioButton( panel, -1, "Inlet P.", size=(65,-1), style = wx.RB_GROUP )
         radio2 = wx.RadioButton( panel, -1, "Outlet P.", size=(65,-1))
-        radio3 = wx.RadioButton( panel, -1, "Flow", size=(65,-1), style = wx.RB_GROUP )
+        radio3 = wx.RadioButton( panel, -1, "Flow", size=(65,-1) )
         radio4 = wx.RadioButton( panel, -1, "C. Ratio", size=(65,-1))
 
         spin = wx.SpinCtrlDouble(panel, value='0.95', size=(60,-1),style=wx.SP_ARROW_KEYS,

@@ -181,15 +181,16 @@ class GUISelect(GUIGraph):
 
     def OnLeftDown(self, event):
         self.update()
-        #get the snap position of the selection
-        snap_pos = getSnapPos(self.Canvas.PixelToWorld(event.GetPosition()))
         real_pos = self.Canvas.PixelToWorld(event.GetPosition())
+        #get the snap position of the selection
+        snap_pos = getSnapPos(real_pos)
+
         #get the node selected if infact a node was selected
         #if there is no node at the click posistion then the
         #self.selected_node will still be none
         #and the condition in OnMove will not be satisfied
         node = self.graph.findNodeByPos(snap_pos)
-        edge = self.graph.getEdgeFromPoint(real_pos, margin = 4)
+        edge = self.graph.getEdgeFromPoint(real_pos, margin = 4/self.Canvas.Scale)
 
         if edge:
             self.selection = self.graph.focus_edge = edge

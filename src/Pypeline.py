@@ -106,24 +106,24 @@ class CustomStatusBar(wx.StatusBar):
         wx.StatusBar.__init__(self, parent)
 
         # This status bar has three fields
-        self.SetFieldsCount(3)
+        self.SetFieldsCount(7)
         # Sets the three fields to be relative widths to each other.
-        self.SetStatusWidths([-2, -1, -2])
+        self.SetStatusWidths([-2, -3,-2,-2,-2,-3, -1])
 
         self.sizeChanged = False
-        self.Bind(wx.EVT_SIZE, self.OnSize)
-        self.Bind(wx.EVT_IDLE, self.OnIdle)
+        # self.Bind(wx.EVT_SIZE, self.OnSize)
+        # self.Bind(wx.EVT_IDLE, self.OnIdle)
 
         # Field 0 ... just text
-        self.SetStatusText("A Custom StatusBar...", 0)
+        self.SetStatusText("Ready", 0)
 
-        # This will fall into field 1 (the second field)
-        self.cb = wx.CheckBox(self, 1001, "toggle clock")
-        self.Bind(wx.EVT_CHECKBOX, self.OnToggleClock, self.cb)
-        self.cb.SetValue(True)
+        # # This will fall into field 1 (the second field)
+        # self.cb = wx.CheckBox(self, 1001, "toggle clock")
+        # self.Bind(wx.EVT_CHECKBOX, self.OnToggleClock, self.cb)
+        # self.cb.SetValue(True)
 
         # set the initial position of the checkbox
-        self.Reposition()
+        # self.Reposition()
 
         # We're going to use a timer to drive a 'clock' in the last
         # field.
@@ -137,41 +137,41 @@ class CustomStatusBar(wx.StatusBar):
     def Notify(self):
         t = time.localtime(time.time())
         st = time.strftime("%d-%b-%Y   %I:%M:%S", t)
-        self.SetStatusText(st, 2)
+        self.SetStatusText(st, 6)
 
 
 
-    # the checkbox was clicked
-    def OnToggleClock(self, event):
-        if self.cb.GetValue():
-            self.timer.Start(1000)
-            self.Notify()
-        else:
-            self.timer.Stop()
+    # # the checkbox was clicked
+    # def OnToggleClock(self, event):
+    #     if self.cb.GetValue():
+    #         self.timer.Start(1000)
+    #         self.Notify()
+    #     else:
+    #         self.timer.Stop()
 
 
-    def OnSize(self, evt):
-        evt.Skip()
-        self.Reposition()  # for normal size events
+    # def OnSize(self, evt):
+    #     evt.Skip()
+    #     self.Reposition()  # for normal size events
+    #
+    #     # Set a flag so the idle time handler will also do the repositioning.
+    #     # It is done this way to get around a buglet where GetFieldRect is not
+    #     # accurate during the EVT_SIZE resulting from a frame maximize.
+    #     self.sizeChanged = True
+    #
+    #
+    # def OnIdle(self, evt):
+    #     if self.sizeChanged:
+    #         self.Reposition()
 
-        # Set a flag so the idle time handler will also do the repositioning.
-        # It is done this way to get around a buglet where GetFieldRect is not
-        # accurate during the EVT_SIZE resulting from a frame maximize.
-        self.sizeChanged = True
 
-
-    def OnIdle(self, evt):
-        if self.sizeChanged:
-            self.Reposition()
-
-
-    # reposition the checkbox
-    def Reposition(self):
-        rect = self.GetFieldRect(1)
-        rect.x += 1
-        rect.y += 1
-        self.cb.SetRect(rect)
-        self.sizeChanged = False
+    # # reposition the checkbox
+    # def Reposition(self):
+    #     rect = self.GetFieldRect(1)
+    #     rect.x += 1
+    #     rect.y += 1
+    #     self.cb.SetRect(rect)
+    #     self.sizeChanged = False
 
 
 ################################################################################################################################################
@@ -265,6 +265,7 @@ class RibbonFrame(wx.Frame):
     def __init__(self, parent, id=wx.ID_ANY, title="", pos=wx.DefaultPosition,
                  size=wx.DefaultSize, style=wx.DEFAULT_FRAME_STYLE):
 
+
         wx.Frame.__init__(self, parent, id, title, pos, size, style)
 
         # CHANGE WHEN WE LEARN HOW TO USE TOP LEFT CORNER OF RIBBON TOOLBAR
@@ -275,6 +276,7 @@ class RibbonFrame(wx.Frame):
         # button_1.SetTopStartColour(wx.Colour(135, 206, 250))
         # button_1.SetBottomEndColour(wx.Colour(30, 144, 255))
         # button_1.SetBottomStartColour(wx.Colour(30, 144, 255))
+
 
         menubar = wx.MenuBar()
 

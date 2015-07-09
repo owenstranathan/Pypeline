@@ -29,7 +29,7 @@ CONTRACTS:
     1)
         duplicate edges are disallowed
 '''
-from wx.lib.floatcanvas import FloatCanvas
+from floatcanvas import FloatCanvas
 import Geometry as Geom
 import math
 
@@ -491,7 +491,7 @@ class Graph():
     ##edge in the graph
     def draw(self, Canvas):
         NODE_SIZE = 10 /Canvas.Scale ##the physical size of the node as drawn on the canvas
-        LINE_SIZE = 4 #* Canvas.Scale
+        LINE_SIZE = 4 * Canvas.Scale
 
         #this adds lines and circles to the graph
         for node in self.nodes:
@@ -501,14 +501,14 @@ class Graph():
                 if edge is self.focus_edge:
                     Canvas.AddArrowLine(
                         line, LineWidth=LINE_SIZE + 8,
-                        LineColor = "YELLOW"
-                        #ArrowHeadSize=16
+                        LineColor = "YELLOW",
+                        ArrowHeadSize=16/Canvas.Scale
                     )
 
                 Canvas.AddArrowLine(
                     line, LineWidth=LINE_SIZE,
-                    LineColor="BLACK"
-                    #ArrowHeadSize=16
+                    LineColor="BLACK",
+                    ArrowHeadSize=16 *Canvas.Scale
                 )
                 for element in edge.elements:
                     element.draw(Canvas, edge.line)

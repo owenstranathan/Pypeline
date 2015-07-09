@@ -90,7 +90,7 @@ class ListPanel(wx.Panel):
 
 
     def __init__(self, parent, model=None, data=None):
-        wx.Panel.__init__(self, parent, -1,size=(250,230))
+        wx.Panel.__init__(self, parent, -1,size=(248,230))
 
         # Create a dataview control
         self.dvc = dv.DataViewCtrl(self,
@@ -168,7 +168,7 @@ class ListPanel(wx.Panel):
 
 
     def OnNewView(self, evt):
-        f = wx.Frame(None, title="Wide view", size=(600,400))
+        f = wx.Frame(None, title="Wide view", size=(300,600))
         ListPanel(f, self.model)
         b = f.FindWindowByName("newView")
         b.Disable()
@@ -358,7 +358,7 @@ class CompressorPropertiesPanel(wx.Panel):
     def __init__(self, parent):
 
         # wx.Panel.__init__(self, parent, -1 )
-        wx.Panel.__init__(self, parent, -1,size=(240,350))
+        wx.Panel.__init__(self, parent, -1,size=(240,300))
 
         panel = wx.Panel(self, -1)
 
@@ -479,8 +479,8 @@ class CompressorTabPanel(scrolled.ScrolledPanel):
 
         sizer.Add(ListPanel(self, None, data=nodedata), 0, wx.LEFT|wx.TOP|wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 5)
         sizer.Add(CompressorInfoPanel(self), 0, wx.TOP|wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 5)
-        sizer.Add(CompressorPhysicalPanel(self), 0, wx.TOP| wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 20)
-        sizer.Add(CompressorPropertiesPanel(self), 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 20)
+        sizer.Add(CompressorPhysicalPanel(self), 0, wx.TOP| wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 5)
+        sizer.Add(CompressorPropertiesPanel(self), 1, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 5)
 
         self.SetSizerAndFit(sizer)
         sizer.Fit(self)

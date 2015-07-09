@@ -819,13 +819,16 @@ class RibbonFrame(wx.Frame):
         s.Add(s2, 6, wx.EXPAND)
         s2.Add(s2a, 1, wx.EXPAND | wx.FIXED_MINSIZE)
         s2.Add(s2b, 6, wx.EXPAND)
+
         # logwindow yerine Demo'dan Toolbar orneginden al
         s2b.Add(self.drawing_canvas, 1, wx.EXPAND | wx.FIXED_MINSIZE)
         s2a.Add(self.notebook, 1, wx.EXPAND | wx.FIXED_MINSIZE)
         s2a.Add(self.search, 0, wx.EXPAND | wx.FIXED_MINSIZE)
         self.panel = panel
         panel.SetSizer(s)
-        self.SetIcon(images.Mondrian.Icon)
+
+        icon1 = wx.Icon("../src/logo.png", wx.BITMAP_TYPE_PNG)
+        self.SetIcon(icon1)
         self.CenterOnScreen()
         self.Maximize()
         self.Show()
@@ -1000,9 +1003,12 @@ class RibbonFrame(wx.Frame):
 ################################################################################################################################################
 ################################################################################################################################################
 
+
+
+
 if __name__ == '__main__':
     app = wx.App()
-    frame = RibbonFrame(None, -1, "PypeSim @ASRAD",size=(900, 700))
+    frame = RibbonFrame(None, -1, "Pipe Network Planner Ver .0.9  @ Copyright By ASRAD",size=(900, 700))
     frame.Show(True)
     frame.Centre()
     app.MainLoop()

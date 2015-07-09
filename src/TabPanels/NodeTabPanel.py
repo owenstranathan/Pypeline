@@ -103,7 +103,7 @@ class ListPanel(wx.Panel):
 
 
     def __init__(self, parent, model=None, data=None):
-        wx.Panel.__init__(self, parent, -1,size=(250,230))
+        wx.Panel.__init__(self, parent, -1,size=(248,230))
 
         # Create a dataview control
         self.dvc = dv.DataViewCtrl(self,
@@ -181,7 +181,7 @@ class ListPanel(wx.Panel):
 
 
     def OnNewView(self, evt):
-        f = wx.Frame(None, title="Wide view", size=(600,400))
+        f = wx.Frame(None, title="Wide view", size=(300,600))
         ListPanel(f, self.model)
         b = f.FindWindowByName("newView")
         b.Disable()
@@ -294,7 +294,9 @@ class NodePhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+
+
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -521,7 +523,7 @@ class NodeTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(179, 232, 210, 150)
         self.SetBackgroundColour(primary)
 
         nodedata = ListCtrl.nodedata.items()

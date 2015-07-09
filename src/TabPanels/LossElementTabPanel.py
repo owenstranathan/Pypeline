@@ -99,7 +99,7 @@ class ListPanel(wx.Panel):
 
 
     def __init__(self, parent, model=None, data=None):
-        wx.Panel.__init__(self, parent, -1,size=(250,230))
+        wx.Panel.__init__(self, parent, -1,size=(248,230))
 
         # Create a dataview control
         self.dvc = dv.DataViewCtrl(self,
@@ -177,7 +177,7 @@ class ListPanel(wx.Panel):
 
 
     def OnNewView(self, evt):
-        f = wx.Frame(None, title="Wide view", size=(600,400))
+        f = wx.Frame(None, title="Wide view", size=(300,600))
         ListPanel(f, self.model)
         b = f.FindWindowByName("newView")
         b.Disable()
@@ -242,18 +242,18 @@ class LossElementInfoPanel(wx.Panel):
         text2 = wx.StaticText(panel, -1, "COMMENT :")
         text3 = wx.StaticText(panel, -1, "TYPE :")
 
-        tctrl1 = wx.TextCtrl(panel, -1, "P345613",size=(60,-1))
+        tctrl1 = wx.TextCtrl(panel, -1, "P345613",size=(80,-1))
         tctrl2 = wx.TextCtrl(panel, -1, style=wx.TE_MULTILINE)
 
         node_choices = [u"Generic L.E.",u"Typical L.E."]
         choices1 = wx.Choice(panel, wx.ID_ANY, choices=node_choices)
         choices1.SetSelection(0)
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("pipecoordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
-        button = wx.BitmapButton(self, -1, bmp, (5, 5),
+        button = wx.BitmapButton(panel, -1, bmp, (5, 5),
                        (bmp.GetWidth(), bmp.GetHeight()))
         button.SetToolTipString("Coordinate Selection From Map")
 
@@ -271,7 +271,7 @@ class LossElementInfoPanel(wx.Panel):
 
         sizer2.Add(text1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0)
         sizer2.Add(tctrl1, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 20)
-        sizer2.Add(button, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 20)
+        sizer2.Add(button, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 10)
 
         sizer3.Add(text2, 1, wx.ALIGN_CENTER_VERTICAL, 0)
         sizer3.Add(tctrl2, 2, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 1)
@@ -299,7 +299,7 @@ class LossElementPhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -363,6 +363,8 @@ class LossElementPhysicalPanel(wx.Panel):
 
 '''PROPERTIES PANEL'''
 
+
+
 class LossElementPropertiesPanel(wx.Panel):
     def __init__(self, parent):
 
@@ -375,33 +377,38 @@ class LossElementPropertiesPanel(wx.Panel):
         radio1 = wx.RadioButton( panel, -1, "Open",size=(50,-1), style = wx.RB_GROUP )
         radio2 = wx.RadioButton( panel, -1, "Close",size=(50,-1))
 
-        text1 = wx.StaticText( panel, -1, "         K Factor :",size=(100, -1 ) )
+        text1 = wx.StaticText( panel, -1, "               K Factor :",size=(100, -1 ) )
 
-        spin = wx.SpinCtrlDouble(panel, value='0.95', size=(40,-1),style=wx.SP_ARROW_KEYS,
+        spin = wx.SpinCtrlDouble(panel, value='0.95', size=(60,-1),style=wx.SP_ARROW_KEYS,
                                  min=0.50, max=0.99, inc=0.01)
         spin.SetDigits(2)
 
-        Loss_element_Btn = wx.Button(panel, -1, "Typical Loss Element",size=(150, 40))
+        Loss_element_Btn = wx.Button(panel, -1, "Typical Loss Element",size=(150, 30))
 
         # SIZERS
         sizer1 = wx.BoxSizer(wx.VERTICAL)
         sizer2 = wx.BoxSizer(wx.HORIZONTAL)
         sizer3 = wx.BoxSizer(wx.HORIZONTAL)
+        sizer4 = wx.BoxSizer(wx.HORIZONTAL)
 
         box1_title = wx.StaticBox( panel, -1, "STATUS" )
         box1 = wx.StaticBoxSizer( box1_title, wx.VERTICAL )
 
-        sizer2.Add( radio1, 1, wx.ALIGN_CENTRE|wx.LEFT, 10)
-        sizer2.Add( radio2, 1, wx.ALIGN_CENTRE|wx.LEFT, 40)
+        sizer2.Add( radio1, 1, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 30)
+        sizer2.Add( radio2, 1, wx.ALIGN_CENTRE|wx.LEFT|wx.RIGHT, 30)
 
-        sizer3.Add( text1, 2, wx.ALIGN_CENTRE|wx.ALL, 2)
-        sizer3.Add( spin, 1, wx.ALIGN_CENTRE|wx.ALL, 2)
+        sizer3.Add( text1, 1, wx.ALIGN_CENTRE|wx.RIGHT, 10)
+        sizer3.Add( spin, 0, wx.ALIGN_CENTRE|wx.RIGHT, 15)
 
-        box1.Add( sizer2, 1, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 5 )
-        box1.Add( sizer3, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 5 )
+        sizer4.Add( Loss_element_Btn, 0, wx.ALIGN_CENTRE|wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL, 2)
+
+
+        box1.Add( sizer2, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0 )
+        box1.Add( sizer3, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0 )
+        box1.Add( sizer4, 1, wx.ALL|wx.ALIGN_CENTER_VERTICAL|wx.ALIGN_CENTER_HORIZONTAL, 0 )
 
         sizer1.Add( box1, 1, wx.ALIGN_CENTRE|wx.ALL, 1)
-        sizer1.Add( Loss_element_Btn, 0, wx.ALIGN_CENTRE|wx.ALL|wx.ALIGN_CENTRE_HORIZONTAL, 1)
+
 
         panel.SetSizer( sizer1 )
         sizer1.Fit( panel )
@@ -415,7 +422,7 @@ class LossElementTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(204,193,217, 150)
         self.SetBackgroundColour(primary)
         nodedata = ListCtrl.nodedata.items()
         nodedata.sort()

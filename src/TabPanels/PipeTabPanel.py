@@ -93,7 +93,7 @@ class ListPanel(wx.Panel):
 
 
     def __init__(self, parent, model=None, data=None):
-        wx.Panel.__init__(self, parent, -1,size=(250,230))
+        wx.Panel.__init__(self, parent, -1,size=(248,230))
 
         # Create a dataview control
         self.dvc = dv.DataViewCtrl(self,
@@ -171,7 +171,7 @@ class ListPanel(wx.Panel):
 
 
     def OnNewView(self, evt):
-        f = wx.Frame(None, title="Wide view", size=(600,400))
+        f = wx.Frame(None, title="Wide view", size=(300,600))
         ListPanel(f, self.model)
         b = f.FindWindowByName("newView")
         b.Disable()
@@ -239,19 +239,19 @@ class PipeInfoPanel(wx.Panel):
         tctrl2 = wx.TextCtrl(panel, -1, "N34567",size=(55,-1))
         tctrl3 = wx.TextCtrl(panel, -1, style=wx.TE_MULTILINE)
 
-        bmp1= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp1= wx.Image("pipecoordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp1, wx.BLUE)
         bmp1.SetMask(mask)
 
-        button1 = wx.BitmapButton(self, -1, bmp1, (5, 5),
+        button1 = wx.BitmapButton(panel, -1, bmp1, (5, 5),
                        (bmp1.GetWidth(), bmp1.GetHeight()))
-        button1.SetToolTipString("election From Map")
+        button1.SetToolTipString("Selection From Map")
 
-        bmp2= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp2= wx.Image("pipecoordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp2, wx.BLUE)
         bmp2.SetMask(mask)
 
-        button2 = wx.BitmapButton(self, -1, bmp2, (5, 5),
+        button2 = wx.BitmapButton(panel, -1, bmp2, (5, 5),
                        (bmp2.GetWidth(), bmp2.GetHeight()))
         button2.SetToolTipString("Selection From Map")
 
@@ -307,7 +307,7 @@ class PipePhysicalPanel(wx.Panel):
         statictext2 = wx.StaticText(panel, -1, "Th.")
 
 
-        bmp1 = wx.Image("aquabutton.jpg", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp1 = wx.Image("coordinate.png", wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp1, wx.BLUE)
         bmp1.SetMask(mask)
         bmpButton1 = wx.BitmapButton(self, -1, bmp1, (20, 20),
@@ -318,7 +318,7 @@ class PipePhysicalPanel(wx.Panel):
         textctrl2 = wx.TextCtrl(panel, -1, "23", size=(40, -1))
         textctrl3 = wx.TextCtrl(panel, -1, "0.1", size=(40, -1))
 
-        rButton1 = wx.RadioButton(panel, -1, "Stand.", size=(60, -1) )
+        rButton1 = wx.RadioButton(panel, -1, "Stand.", size=(60, -1), style = wx.RB_GROUP  )
         rButton2 = wx.RadioButton(panel, -1, "In Dia." , size=(60, -1))
 
         choices1 = [u"Km", u"Mile"]
@@ -408,7 +408,7 @@ class PipePropertiesPanel(wx.Panel):
         choice2.SetSelection(0)
 
         ################# CONTROLS SECOND STATIC BOX #################
-        rButton1 = wx.RadioButton(panel, -1, "Sim." )
+        rButton1 = wx.RadioButton(panel, -1, "Sim.", style = wx.RB_GROUP  )
         rButton2 = wx.RadioButton(panel, -1, "User" )
 
         t8 = wx.StaticText(panel, -1, "Base P.", size=(50, -1))
@@ -426,7 +426,7 @@ class PipePropertiesPanel(wx.Panel):
 
 
 ################# CONTROLS THIRD STATIC BOX #################
-        rButton3 = wx.RadioButton(panel, -1, "Sim." )
+        rButton3 = wx.RadioButton(panel, -1, "Sim.", style = wx.RB_GROUP  )
         rButton4 = wx.RadioButton(panel, -1, "User" )
 
         t12 = wx.StaticText(panel, -1, "Amb. P.", size=(50, -1))
@@ -519,7 +519,7 @@ class PipeTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(183, 221, 232, 150)
         self.SetBackgroundColour(primary)
 
         pipedata = ListCtrl.pipedata.items()

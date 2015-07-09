@@ -90,7 +90,7 @@ class ListPanel(wx.Panel):
 
 
     def __init__(self, parent, model=None, data=None):
-        wx.Panel.__init__(self, parent, -1,size=(250,230))
+        wx.Panel.__init__(self, parent, -1,size=(248,230))
 
         # Create a dataview control
         self.dvc = dv.DataViewCtrl(self,
@@ -168,7 +168,7 @@ class ListPanel(wx.Panel):
 
 
     def OnNewView(self, evt):
-        f = wx.Frame(None, title="Wide view", size=(600,400))
+        f = wx.Frame(None, title="Wide view", size=(300,600))
         ListPanel(f, self.model)
         b = f.FindWindowByName("newView")
         b.Disable()
@@ -233,18 +233,18 @@ class RegulatorInfoPanel(wx.Panel):
         text2 = wx.StaticText(panel, -1, "COMMENT :")
         text3 = wx.StaticText(panel, -1, "TYPE :")
 
-        tctrl1 = wx.TextCtrl(panel, -1, "P345613",size=(60,-1))
+        tctrl1 = wx.TextCtrl(panel, -1, "P345613",size=(80,-1))
         tctrl2 = wx.TextCtrl(panel, -1, style=wx.TE_MULTILINE)
 
         node_choices = [u"Generic Regulator",u"Typical Regulator", u"Regulator Station"]
         choices1 = wx.Choice(panel, wx.ID_ANY, choices=node_choices)
         choices1.SetSelection(0)
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("pipecoordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
-        button = wx.BitmapButton(self, -1, bmp, (5, 5),
+        button = wx.BitmapButton(panel, -1, bmp, (5, 5),
                        (bmp.GetWidth(), bmp.GetHeight()))
         button.SetToolTipString("Coordinate Selection From Map")
 
@@ -262,7 +262,7 @@ class RegulatorInfoPanel(wx.Panel):
 
         sizer2.Add(text1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0)
         sizer2.Add(tctrl1, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 20)
-        sizer2.Add(button, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 20)
+        sizer2.Add(button, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 10)
 
         sizer3.Add(text2, 1, wx.ALIGN_CENTER_VERTICAL, 0)
         sizer3.Add(tctrl2, 2, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 1)
@@ -290,7 +290,7 @@ class RegulatorPhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -358,7 +358,7 @@ class RegulatorPropertiesPanel(wx.Panel):
     def __init__(self, parent):
 
         # wx.Panel.__init__(self, parent, -1 )
-        wx.Panel.__init__(self, parent, -1,size=(240,350))
+        wx.Panel.__init__(self, parent, -1,size=(240,300))
 
         panel = wx.Panel(self, -1)
 
@@ -372,7 +372,7 @@ class RegulatorPropertiesPanel(wx.Panel):
 
         radio1 = wx.RadioButton( panel, -1, "Inlet P.", size=(65,-1), style = wx.RB_GROUP )
         radio2 = wx.RadioButton( panel, -1, "Outlet P.", size=(65,-1))
-        radio3 = wx.RadioButton( panel, -1, "Flow", size=(65,-1), style = wx.RB_GROUP )
+        radio3 = wx.RadioButton( panel, -1, "Flow", size=(65,-1))
         radio4 = wx.RadioButton( panel, -1, "C. Ratio", size=(65,-1))
 
         spin = wx.SpinCtrlDouble(panel, value='0.95', size=(60,-1),style=wx.SP_ARROW_KEYS,
@@ -470,7 +470,7 @@ class RegulatorTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(251,250, 174, 150)
         self.SetBackgroundColour(primary)
 
         nodedata = ListCtrl.nodedata.items()
@@ -481,8 +481,8 @@ class RegulatorTabPanel(scrolled.ScrolledPanel):
 
         sizer.Add(ListPanel(self, None, data=nodedata), 0, wx.LEFT|wx.TOP|wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 5)
         sizer.Add(RegulatorInfoPanel(self), 0, wx.TOP|wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 5)
-        sizer.Add(RegulatorPhysicalPanel(self), 0, wx.TOP| wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 20)
-        sizer.Add(RegulatorPropertiesPanel(self), 0, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 20)
+        sizer.Add(RegulatorPhysicalPanel(self), 0, wx.TOP| wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 5)
+        sizer.Add(RegulatorPropertiesPanel(self), 1, wx.TOP | wx.ALIGN_CENTRE_HORIZONTAL |wx.FIXED_MINSIZE, 5)
 
         self.SetSizerAndFit(sizer)
         sizer.Fit(self)

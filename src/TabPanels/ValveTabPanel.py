@@ -90,7 +90,7 @@ class ListPanel(wx.Panel):
 
 
     def __init__(self, parent, model=None, data=None):
-        wx.Panel.__init__(self, parent, -1,size=(250,230))
+        wx.Panel.__init__(self, parent, -1,size=(248,230))
 
         # Create a dataview control
         self.dvc = dv.DataViewCtrl(self,
@@ -168,7 +168,7 @@ class ListPanel(wx.Panel):
 
 
     def OnNewView(self, evt):
-        f = wx.Frame(None, title="Wide view", size=(600,400))
+        f = wx.Frame(None, title="Wide view", size=(300,600))
         ListPanel(f, self.model)
         b = f.FindWindowByName("newView")
         b.Disable()
@@ -233,18 +233,18 @@ class ValveInfoPanel(wx.Panel):
         text2 = wx.StaticText(panel, -1, "COMMENT :")
         text3 = wx.StaticText(panel, -1, "TYPE :")
 
-        tctrl1 = wx.TextCtrl(panel, -1, "P345613",size=(60,-1))
+        tctrl1 = wx.TextCtrl(panel, -1, "P345613",size=(80,-1))
         tctrl2 = wx.TextCtrl(panel, -1, style=wx.TE_MULTILINE)
 
         node_choices = [u"Check Valve",u"Block Valve", u"Resistance Valve"]
         choices1 = wx.Choice(panel, wx.ID_ANY, choices=node_choices)
         choices1.SetSelection(0)
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("pipecoordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
-        button = wx.BitmapButton(self, -1, bmp, (5, 5),
+        button = wx.BitmapButton(panel, -1, bmp, (5, 5),
                        (bmp.GetWidth(), bmp.GetHeight()))
         button.SetToolTipString("Coordinate Selection From Map")
 
@@ -262,7 +262,7 @@ class ValveInfoPanel(wx.Panel):
 
         sizer2.Add(text1, 0, wx.ALL|wx.ALIGN_CENTER_VERTICAL, 0)
         sizer2.Add(tctrl1, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 20)
-        sizer2.Add(button, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 20)
+        sizer2.Add(button, 0, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 10)
 
         sizer3.Add(text2, 1, wx.ALIGN_CENTER_VERTICAL, 0)
         sizer3.Add(tctrl2, 2, wx.LEFT|wx.ALIGN_CENTER_VERTICAL, 1)
@@ -290,7 +290,7 @@ class ValvePhysicalPanel(wx.Panel):
         self.ch.SetSelection(0)
 
 
-        bmp= wx.Image("aquabutton.jpg",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
+        bmp= wx.Image("coordinate.png",wx.BITMAP_TYPE_PNG).ConvertToBitmap()
         mask = wx.Mask(bmp, wx.BLUE)
         bmp.SetMask(mask)
 
@@ -402,7 +402,7 @@ class ValveTabPanel(scrolled.ScrolledPanel):
 
         scrolled.ScrolledPanel.__init__(self, parent, -1)
 
-        primary = wx.Colour(204, 204, 204, 150)
+        primary = wx.Colour(242, 163, 167, 150)
         self.SetBackgroundColour(primary)
 
         nodedata = ListCtrl.nodedata.items()
